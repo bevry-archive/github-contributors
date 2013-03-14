@@ -15,8 +15,8 @@ npm install --save getcontributors
 ``` javascript
 require('getcontributors')({
 	users: ['bevry'],
-	github_client_id: null,
-	github_client_secret: null,
+	github_client_id: null, // optional
+	github_client_secret: null, // optional
 	log: console.log, // args: level, message...
 	next: console.log // args: err, contributors
 })
@@ -24,18 +24,20 @@ require('getcontributors')({
 
 Contributors are returned as an array of contributor objects, here is an examply contributor object:
 
-``` coffee
+``` javascript
 {
-	name: "Benjamin Lupton"
-	email: "b@lupton.cc"
-	url: "https://github.com/balupton"
-	username: "balupton"
-	text: "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
+	name: "Benjamin Lupton",
+	email: "b@lupton.cc",
+	url: "https://github.com/balupton",
+	username: "balupton",
+	text: "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)",
 	repos: {
-		docpad: 'https://github.com/bevry/docpad'
-		getcontributors: 'https://github.com/bevry/getcontributors'
+		docpad: "https://github.com/bevry/docpad",
+		getcontributors: "https://github.com/bevry/getcontributors"
+		// ...
 	}
 }
+```
 
 
 ## History
