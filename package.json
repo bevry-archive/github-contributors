@@ -1,0 +1,42 @@
+{
+	"name": "getcontributors",
+	"version": "1.0.0",
+	"description": "Fetch the contributors of the repositories of the specified github users",
+	"homepage": "https://github.com/bevry/getcontributors",
+	"keywords": [
+		"contributors","package.json","github","organisation","organization","users","owners","maintainers"
+	],
+	"author": "Benjamin Lupton <b@lupton.cc> (http://balupton.com)",
+	"maintainers": [
+		"Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
+	],
+	"contributors": [
+		"Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
+	],
+	"bugs": {
+		"url": "https://github.com/bevry/getcontributors/issues"
+	},
+	"repository" : {
+		"type": "git",
+		"url": "http://github.com/bevry/getcontributors.git"
+	},
+	"engines" : {
+		"node": ">=0.4"
+	},
+	"dependencies": {
+		"bal-util": "~1.16.11",
+		"feedr": "~2.4.2"
+	},
+	"devDependencies": {
+		"coffee-script": "~1.4.0",
+		"joe": "~1.1.1",
+		"chai": "~1.5.0"
+	},
+	"directories": {
+		"lib": "./out/lib"
+	},
+	"scripts": {
+		"test": "node ./out/test/everything-test.js --joe-reporter=list"
+	},
+	"main": "./out/lib/getcontributors.js"
+}
