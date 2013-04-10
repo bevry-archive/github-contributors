@@ -18,6 +18,10 @@ module.exports = (opts,next) ->
 	# Import
 	feedr = new (require('feedr').Feedr)
 	balUtil = require('bal-util')
+	eachr = require('eachr')
+	extendr = require('extendr')
+	{TaskGroup} = require('taskgroup')
+	typeChecker = require('typeChecker')
 
 	# Prepare
 	[opts,next] = balUtil.extractOptsAndCallback(opts,next)
@@ -27,7 +31,7 @@ module.exports = (opts,next) ->
 	opts.log?('info', "Fetching Contributors...")
 
 	# Tasks
-	tasks = new balUtil.Group (err) ->
+	tasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) ->
 		# Check
 		return next(err)  if err
 
@@ -48,9 +52,9 @@ module.exports = (opts,next) ->
 
 	# Read the
 	feedr.readFeeds contributorFeeds, (err,feedRepos) ->
-		balUtil.each feedRepos, (repos) ->  balUtil.each repos, (repo) ->
+		eachr feedRepos, (repos) ->  eachr repos, (repo) ->
 			packageUrl = repo.html_url.replace('//github.com','//raw.github.com')+'/master/package.json'
-			tasks.push (complete) ->
+			tasks.addTask (complete) ->
 				feedr.readFeed packageUrl, (err,packageData) ->
 					return complete()  if err or !packageData  # ignore
 					for contributor in packageData.contributors or []
@@ -64,17 +68,17 @@ module.exports = (opts,next) ->
 							repos: null
 
 						# Extract
-						if balUtil.isString(contributor)
+						if typeChecker.isString(contributor)
 							contributorMatch = /^([^<(]+)\s*(?:<(.+?)>)?\s*(?:\((.+?)\))?$/.exec(contributor)
 							continue  unless contributorMatch
-							balUtil.extend contributorData, {
+							extendr.extend contributorData, {
 								name: (contributorMatch[1] or '').trim() or null
 								email: (contributorMatch[2] or '').trim() or null
 								url: (contributorMatch[3] or '').trim() or null
 								username: null
 							}
-						else if balUtil.isPlainObject(contributor)
-							balUtil.extend contributorData, {
+						else if typeChecker.isPlainObject(contributor)
+							extendr.extend contributorData, {
 								name: contributor.name or null
 								email: contributor.email or null
 								url: contributor.web or null
@@ -108,12 +112,12 @@ module.exports = (opts,next) ->
 						contributors[contributorId].repos ?= {}
 
 						# Extend
-						balUtil.safeShallowExtendPlainObjects(contributors[contributorId],contributorData)
+						extendr.safeShallowExtendPlainObjects(contributors[contributorId],contributorData)
 						contributors[contributorId].repos[repo.name] = repo.html_url
 					complete()
 
 		# Fire
-		tasks.async()
+		tasks.run()
 
 	# Done
 	return @

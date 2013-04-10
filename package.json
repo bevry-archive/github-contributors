@@ -1,6 +1,6 @@
 {
 	"name": "getcontributors",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Fetch the contributors of the repositories of the specified github users",
 	"homepage": "https://github.com/bevry/getcontributors",
 	"keywords": [
@@ -24,19 +24,24 @@
 		"node": ">=0.4"
 	},
 	"dependencies": {
-		"bal-util": "~1.16.11",
+		"bal-util": "~2.0.0",
+		"extendr": "~2.0.1",
+		"taskgroup": "~3.1.2",
+		"eachr": "~2.0.2",
+		"typechecker": "~2.0.1",
 		"feedr": "~2.4.2"
 	},
 	"devDependencies": {
 		"coffee-script": "~1.4.0",
-		"joe": "~1.1.1",
+		"joe": "~1.2.0",
+		"joe-reporter-console": "~1.2.1",
 		"chai": "~1.5.0"
 	},
 	"directories": {
 		"lib": "./out/lib"
 	},
 	"scripts": {
-		"test": "node ./out/test/everything-test.js --joe-reporter=list"
+		"test": "node ./out/test/everything-test.js"
 	},
 	"main": "./out/lib/getcontributors.js"
 }

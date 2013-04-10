@@ -1,4 +1,8 @@
-# Get Contributors [![Build Status](https://secure.travis-ci.org/bevry/getcontributors.png?branch=master)](http://travis-ci.org/bevry/getcontributors)
+# Get Contributors
+
+[![Build Status](https://secure.travis-ci.org/bevry/getcontributors.png?branch=master)](http://travis-ci.org/bevry/getcontributors)
+[![NPM version](https://badge.fury.io/js/getcontributors.png)](https://npmjs.org/package/getcontributors)
+[![Flattr this project](https://raw.github.com/balupton/flattr-buttons/master/badge-89x18.gif)](http://flattr.com/thing/344188/balupton-on-Flattr)
 
 Fetch the contributors of the repositories of the specified github users
 
