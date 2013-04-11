@@ -1,5 +1,8 @@
 ## History
 
+- v1.0.2 April 11, 2013
+	- Fix `Cannot find module 'typeChecker'`
+
 - v1.0.1 April 10, 2013
 	- Updated dependencies
 

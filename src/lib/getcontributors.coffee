@@ -21,7 +21,7 @@ module.exports = (opts,next) ->
 	eachr = require('eachr')
 	extendr = require('extendr')
 	{TaskGroup} = require('taskgroup')
-	typeChecker = require('typeChecker')
+	typeChecker = require('typechecker')
 
 	# Prepare
 	[opts,next] = balUtil.extractOptsAndCallback(opts,next)
