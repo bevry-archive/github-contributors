@@ -46,19 +46,7 @@ module.exports = (opts,next) ->
 		# We need a username
 		return  unless contributorData.username
 
-		# Fallback
-		contributorData.name or= contributorData.username
-		contributorData.url or= "https://github.com/#{contributorData.username}"
-
-		# Create text property
-		contributorData.text = []
-		contributorData.text.push contributorData.name
-		contributorData.text.push "<#{contributorData.email}>"  if contributorData.email
-		contributorData.text.push "(#{contributorData.url})"
-		contributorData.text = contributorData.text.join(' ') or null
-
 		# Find existing contributor
-		# Prefer username over name
 		contributorData.id = contributorData.username.toLowerCase()
 		existingContributorData = contributors[contributorData.id] ?= {}
 
@@ -77,8 +65,24 @@ module.exports = (opts,next) ->
 		# Check
 		return next(err)  if err
 
-		# Handle
-		contributorsSortedArray = (contributorData  for own key,contributorData of contributors).sort (a,b) ->
+		# Merge and ensure certain properties
+		ensurer = (contributorData) ->
+			# Fallbacks
+			contributorData.name or= contributorData.username
+			contributorData.url or= "https://github.com/#{contributorData.username}"
+
+			# Create text property
+			contributorData.text = []
+			contributorData.text.push(contributorData.name)
+			contributorData.text.push("<#{contributorData.email}>")  if contributorData.email
+			contributorData.text.push("(#{contributorData.url})")
+			contributorData.text = contributorData.text.join(' ') or null
+
+			# Return
+			return contributorData
+
+		# Sort our contributors
+		comparator = (a,b) ->
 			A = a.name.toLowerCase()
 			B = b.name.toLowerCase()
 			if A is B
@@ -87,6 +91,9 @@ module.exports = (opts,next) ->
 				-1
 			else
 				1
+
+		# Handle
+		contributorsSortedArray = (contributorData  for own key,contributorData of contributors).map(ensurer).sort(comparator)
 		contributorsSortedObject = (contributors[contributorData.id]  for contributorData in contributorsSortedArray)
 
 		# Log

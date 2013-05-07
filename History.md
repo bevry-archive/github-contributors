@@ -1,5 +1,8 @@
 ## History
 
+- v1.1.1 May 7, 2013
+	- Better merging of contributor data between sources
+
 - v1.1.0 May 7, 2013
 	- Also fetch contributors from the GitHub API
 	- Ignore repos that are forks
