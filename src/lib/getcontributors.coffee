@@ -79,9 +79,11 @@ module.exports = (opts,next) ->
 
 		# Handle
 		contributorsSortedArray = (contributorData  for own key,contributorData of contributors).sort (a,b) ->
-			if a.name is b.name
+			A = a.name.toLowerCase()
+			B = b.name.toLowerCase()
+			if A is B
 				0
-			else if a.name < b.name
+			else if A < B
 				-1
 			else
 				1
