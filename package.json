@@ -1,47 +1,57 @@
 {
-	"name": "getcontributors",
-	"version": "1.1.1",
-	"description": "Fetch the contributors of the repositories of the specified github users",
-	"homepage": "https://github.com/bevry/getcontributors",
-	"keywords": [
-		"contributors","package.json","github","organisation","organization","users","owners","maintainers"
-	],
-	"author": "Benjamin Lupton <b@lupton.cc> (http://balupton.com)",
-	"maintainers": [
-		"Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
-	],
-	"contributors": [
-		"Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
-	],
-	"bugs": {
-		"url": "https://github.com/bevry/getcontributors/issues"
-	},
-	"repository" : {
-		"type": "git",
-		"url": "http://github.com/bevry/getcontributors.git"
-	},
-	"engines" : {
-		"node": ">=0.4"
-	},
-	"dependencies": {
-		"bal-util": "~2.0.0",
-		"extendr": "~2.0.1",
-		"taskgroup": "~3.1.2",
-		"eachr": "~2.0.2",
-		"typechecker": "~2.0.1",
-		"feedr": "~2.4.2"
-	},
-	"devDependencies": {
-		"coffee-script": "~1.6.2",
-		"joe": "~1.2.0",
-		"joe-reporter-console": "~1.2.1",
-		"chai": "~1.6.0"
-	},
-	"directories": {
-		"lib": "./out/lib"
-	},
-	"scripts": {
-		"test": "node ./out/test/everything-test.js"
-	},
-	"main": "./out/lib/getcontributors.js"
+  "name": "getcontributors",
+  "version": "1.1.1",
+  "description": "Fetch the contributors of the repositories of the specified github users",
+  "homepage": "https://github.com/bevry/getcontributors",
+  "keywords": [
+    "contributors",
+    "package.json",
+    "github",
+    "organisation",
+    "organization",
+    "users",
+    "owners",
+    "maintainers"
+  ],
+  "author": "Benjamin Lupton <b@lupton.cc> (http://balupton.com)",
+  "maintainers": [
+    "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
+  ],
+  "contributors": [
+    "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
+  ],
+  "bugs": {
+    "url": "https://github.com/bevry/getcontributors/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/bevry/getcontributors.git"
+  },
+  "engines": {
+    "node": ">=0.4"
+  },
+  "dependencies": {
+    "extendr": "~2.1.0",
+    "taskgroup": "~3.2.3",
+    "eachr": "~2.0.2",
+    "typechecker": "~2.0.1",
+    "feedr": "~2.5.1",
+    "extract-opts": "~2.2.0",
+    "caterpillar-filter": "~2.0.1",
+    "caterpillar-human": "~2.1.0",
+    "caterpillar": "~2.0.4"
+  },
+  "devDependencies": {
+    "coffee-script": "~1.6.2",
+    "joe": "~1.3.0",
+    "joe-reporter-console": "~1.2.1",
+    "chai": "~1.8.0"
+  },
+  "directories": {
+    "lib": "./out/lib"
+  },
+  "scripts": {
+    "test": "node ./out/test/everything-test.js"
+  },
+  "main": "./out/lib/getcontributors.js"
 }

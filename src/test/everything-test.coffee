@@ -1,20 +1,37 @@
 # Import
 {expect} = require('chai')
 joe = require('joe')
-getContributors = require('../../')
 
 # Test
-joe.describe 'getcontributors', (describe,it) ->
-	it 'should work as expected', (done) ->
-		getContributors(
-			users: ['bevry','docpad']
-			github_client_id: process.env.GITHUB_CLIENT_ID or null
-			github_client_secret: process.env.GITHUB_CLIENT_SECRET or null
-			log: console.log
-			next: (err,contributors) ->
+joe.suite 'getcontributors', (suite,test) ->
+	getContributors = null
+
+	# Create our contributors instance
+	test 'create', ->
+		getContributors = require('../../').create(log:console.log);
+
+	# Fetch all the contributors on these github
+	suite 'repo', (suite,test) ->
+		test 'fetch', (done) ->
+			getContributors.fetchContributorsFromRepos ['bevry/getcontributors'], (err) ->
 				expect(err).to.be.null
-				expect(contributors).to.be.an('array')
-				expect(contributors.length).to.not.equal(0)
-				#expect(contributors[0]).to.have.keys(['id','username','name','email','url','text','repos'])
-				done()
-		)
+				return done()
+
+		test 'result', ->
+			contributors = getContributors.getContributors()
+			expect(contributors).to.be.an('array')
+			expect(contributors.length).to.not.equal(0)
+			console.log contributors
+
+	# Fetch all the contributors on these github users/organisations
+	suite 'users', (suite,test) ->
+		test 'fetch', (done) ->
+			getContributors.fetchContributorsFromUsers ['docpad'], (err) ->
+				expect(err).to.be.null
+				return done()
+
+		test 'result', ->
+			contributors = getContributors.getContributors()
+			expect(contributors).to.be.an('array')
+			expect(contributors.length).to.not.equal(0)
+			console.log contributors

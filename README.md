@@ -17,13 +17,25 @@ npm install --save getcontributors
 ## Usage
 
 ``` javascript
-require('getcontributors')({
-	users: ['bevry'],
-	github_client_id: null, // optional
-	github_client_secret: null, // optional
-	log: console.log, // args: level, message...
-	next: console.log // args: err, contributors
-})
+// Create our contributors instance
+var contributors = require('getcontributors').create({
+	githubClientId: null,      // optional, will try process.env.GITHUB_CLIENT_ID
+	githubClientSecret: null,  // optional, will try process.env.GITHUB_CLIENT_SECRET
+	log: console.log           // optional, arguments: level, message... 
+});
+
+// Fetch all the contributors on these github repositories
+contributors.fetchContributorsFromRepos(['bevry/getcontributors'], function(err){
+	console.log(err);
+
+	// Fetch all the contributors on these github users/organisations
+	contributors.fetchContributorsFromUsers(['bevry'], function(err){
+		console.log(err);
+
+		// Get the combined listing
+		console.log(contributors.getContributors());
+	});
+});
 ```
 
 Contributors are returned as an array of contributor objects, here is an examply contributor object:
@@ -45,11 +57,9 @@ Contributors are returned as an array of contributor objects, here is an examply
 
 
 ## History
-
 You can discover the history inside the `History.md` file
 
 
 ## License
-
 Licensed under the incredibly [permissive](http://en.wikipedia.org/wiki/Permissive_free_software_licence) [MIT License](http://creativecommons.org/licenses/MIT/)
-<br/>Copyright &copy; 2012 [Bevry Pty Ltd](http://bevry.me)
+<br/>Copyright &copy; 2012+ [Bevry Pty Ltd](http://bevry.me)
