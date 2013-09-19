@@ -1,5 +1,9 @@
 ## History
 
+- v1.2.0 September 20, 2013
+	- Rewrote to expose more powerful API
+	- Updated dependencies
+
 - v1.1.1 May 7, 2013
 	- Better merging of contributor data between sources
 

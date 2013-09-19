@@ -1,6 +1,6 @@
 {
   "name": "getcontributors",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Fetch the contributors of the repositories of the specified github users",
   "homepage": "https://github.com/bevry/getcontributors",
   "keywords": [

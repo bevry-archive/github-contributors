@@ -38,7 +38,7 @@ contributors.fetchContributorsFromRepos(['bevry/getcontributors'], function(err)
 });
 ```
 
-Contributors are returned as an array of contributor objects, here is an examply contributor object:
+Contributors are returned as an array of contributor objects, here is an example contributor object:
 
 ``` javascript
 {
@@ -48,8 +48,8 @@ Contributors are returned as an array of contributor objects, here is an examply
 	username: "balupton",
 	text: "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)",
 	repos: {
-		docpad: "https://github.com/bevry/docpad",
-		getcontributors: "https://github.com/bevry/getcontributors"
+		"bevry/docpad": "https://github.com/bevry/docpad",
+		"bevry/getcontributors": "https://github.com/bevry/getcontributors"
 		// ...
 	}
 }
