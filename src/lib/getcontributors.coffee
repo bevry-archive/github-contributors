@@ -18,12 +18,10 @@
 # Import
 typeChecker = require('typechecker')
 extendr = require('extendr')
-eachr = require('eachr')
-{extractOpts} = require('extract-opts')
 {TaskGroup} = require('taskgroup')
 
-# GetContributors
-class GetContributors
+# Getter
+class Getter
 	# Contributors
 	# Object listing of all the contributors, indexed by their lowercase username
 	contributorsMap: null  # {}
@@ -38,6 +36,7 @@ class GetContributors
 		# Prepare
 		@config = {}
 		@contributorsMap = {}
+		@reposGetter = require('getrepos').create(opts)
 
 		# Extend configuration
 		extendr.extend(@config, opts)
@@ -82,7 +81,22 @@ class GetContributors
 		@contributorsMap[contributorData.id].repos ?= {}
 
 		# Return
-		return existingContributorData
+		return @contributorsMap[contributorData.id]
+
+	# Clone Contributor
+	cloneContributor: (contributor) ->
+		# Clone
+		contributorData = extendr.safeDeepExtendPlainObjects({
+			name: null
+			email: null
+			url: null
+			username: null
+			text: null
+			repos: null
+		}, contributor)
+
+		# Return
+		return contributorData
 
 	# Prepare a contributor by setting and determing some defaults
 	# contributor = {}
@@ -92,14 +106,7 @@ class GetContributors
 		@log 'debug', 'Preparing the contributor:', contributor
 
 		# Prepare
-		contributorData = extendr.safeDeepExtendPlainObjects({
-			name: null
-			email: null
-			url: null
-			username: null
-			text: null
-			repos: null
-		}, contributor)
+		contributorData = @cloneContributor(contributor)
 
 		# Extract username
 		if contributorData.url and contributorData.username is null
@@ -113,9 +120,12 @@ class GetContributors
 	# Prepare a contributor for return to the user, assume we have no more data, so determine the rest
 	# contributorData = {}
 	# return {}
-	prepareContributorFinale: (contributorData) ->
+	prepareContributorFinale: (contributor) ->
 		# Log
-		@log 'debug', 'Preparing the contributor for the final time:', contributorData
+		@log 'debug', 'Preparing the contributor for the final time:', contributor
+
+		# Prepare
+		contributorData = @cloneContributor(contributor)
 
 		# Fallbacks
 		contributorData.name or= contributorData.username
@@ -133,7 +143,7 @@ class GetContributors
 
 	# Get the contributors
 	# return []
-	getContributors: ->
+	getContributors: (contributors) ->
 		# Log
 		@log 'debug', 'Get contributors'
 
@@ -148,8 +158,24 @@ class GetContributors
 			else
 				1
 
-		# Fetch prepared contributors and sort them
-		contributors = Object.keys(@contributorsMap).map((key) => @contributorsMap[key]).map(@prepareContributorFinale.bind(@)).sort(contributorsComparator)
+		# Allow the user to pass in their own contributors array or object
+		if contributors? is false
+			contributors = @contributorsMap
+		else
+			# Remove duplicates from array
+			if typeChecker.isArray(contributors) is true
+				exists = {}
+				contributors = contributors.filter (contributor) ->
+					exists[contributor.username] ?= 0
+					++exists[contributor.username]
+					return exists[contributor.username] is 1
+
+		# Convert objects to arrays
+		if typeChecker.isPlainObject(contributors) is true
+			contributors = Object.keys(contributors).map((key) => contributors[key])
+
+		# Prepare the contributors that were passed in
+		contributors = contributors.map(@prepareContributorFinale.bind(@)).sort(contributorsComparator)
 
 		# Return
 		return contributors
@@ -164,24 +190,17 @@ class GetContributors
 
 		# Prepare
 		me = @
-		userRepoFeeds = users.map (user) => "https://api.github.com/users/#{user}/repos?per_page=100&client_id=#{@config.githubClientId}&client_secret=#{@config.githubClientSecret}"
 
-		# Read the user's repository feeds
-		@feedr.readFeeds userRepoFeeds, (err,repoFeedResult) ->
+		# Fetch
+		@reposGetter.fetchReposFromUsers users, (err,repos) ->
 			# Check
-			return next(err)  if err
+			return next(err, [])  if err
 
-			# Read the user's repository feed's results
-			# then read each of the repos in the result
-			repoNames = []
-			eachr repoFeedResult, (repos) ->
-				# Check
-				return next(new Error(repos.message))  if repos.message
-
-				# Filter out forks, return just their names
-				eachr repos, (repoData) ->
-					return  if repoData.fork is true
-					repoNames.push(repoData.full_name)
+			# Filter out forks, return just their names
+			repoNames =
+				for repo in repos
+					continue  if repo.fork is true
+					repo.full_name
 
 			# Fetch the contributors for the repos
 			return me.fetchContributorsFromRepos(repoNames, next)
@@ -199,15 +218,25 @@ class GetContributors
 
 		# Prepare
 		me = @
-		tasks = new TaskGroup().setConfig(concurrency:0).once('complete', next)
+		result = []
+		tasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) ->
+			return next(err, [])  if err
+			result = me.getContributors(result)
+			return next(null, result)
 
 		# Add the contributors for each repo
-		eachr repos, (repo) ->
+		repos.forEach (repo) ->
 			tasks.addTask (complete) ->
-				me.fetchContributorsFromPackage(repo, complete)
+				me.fetchContributorsFromPackage repo, (err,contributors=[]) ->
+					return complete(err)  if err
+					result.push(contributors...)
+					return complete()
 
 			tasks.addTask (complete) ->
-				me.fetchContributorsFromRepo(repo, complete)
+				me.fetchContributorsFromRepo repo, (err,contributors=[]) ->
+					return complete(err)  if err
+					result.push(contributors...)
+					return complete()
 
 		# Start
 		tasks.run()
@@ -230,7 +259,10 @@ class GetContributors
 		# Read the repo's package file
 		@feedr.readFeed packageUrl, (err,packageData) ->
 			# Ignore if error'd or no result
-			return next()  if err or !packageData?
+			return next(null, [])  if err or !packageData?
+
+			# Prepare
+			addedContributors = []
 
 			# Add each of the contributors
 			for contributor in [].concat(packageData.contributors or []).concat(packageData.maintainers or [])
@@ -262,10 +294,11 @@ class GetContributors
 				contributorData.repos[repo] = "https://github.com/#{repo}"
 
 				# Add contributor
-				me.addContributor(contributorData)
+				addedContributor = me.addContributor(contributorData)
+				addedContributors.push(addedContributor)  if addedContributor
 
 			# Return contributors
-			return next()
+			return next(null, addedContributors)
 
 		# Chain
 		@
@@ -283,12 +316,16 @@ class GetContributors
 		contributorsUrl = "https://api.github.com/repos/#{repo}/contributors?per_page=100&client_id=#{@config.githubClientId}&client_secret=#{@config.githubClientSecret}"
 
 		# Fetch the repo's contributors
-		@feedr.readFeed contributorsUrl, (err,result=[]) ->
-			# Ignore if error'd or no result
-			return next()  if err or !(result?.length)
+		@feedr.readFeed contributorsUrl, (err,data) ->
+			# Check
+			return next(err, [])  if err
+			return next(null, [])  unless data?.length
+
+			# Prepare
+			addedContributors = []
 
 			# Extract the correct data from the contributors
-			for contributor in result
+			for contributor in data
 				# Prepare
 				contributorData =
 					url: contributor.html_url
@@ -299,10 +336,11 @@ class GetContributors
 				contributorData.repos[repo] = "https://github.com/#{repo}"
 
 				# Add contributor
-				me.addContributor(contributorData)
+				addedContributor = me.addContributor(contributorData)
+				addedContributors.push(addedContributor)  if addedContributor
 
 			# Return contributors
-			return next()
+			return next(null, addedContributors)
 
 		# Chain
 		@
@@ -310,4 +348,4 @@ class GetContributors
 # Export
 module.exports =
 	create: (args...) ->
-		return new GetContributors(args...)
+		return new Getter(args...)

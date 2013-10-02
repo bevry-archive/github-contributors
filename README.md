@@ -1,6 +1,5 @@
 # Get Contributors
 
-[![Build Status](https://secure.travis-ci.org/bevry/getcontributors.png?branch=master)](http://travis-ci.org/bevry/getcontributors)
 [![NPM version](https://badge.fury.io/js/getcontributors.png)](https://npmjs.org/package/getcontributors)
 [![Flattr this project](https://raw.github.com/balupton/flattr-buttons/master/badge-89x18.gif)](http://flattr.com/thing/344188/balupton-on-Flattr)
 
@@ -17,23 +16,23 @@ npm install --save getcontributors
 ## Usage
 
 ``` javascript
-// Create our contributors instance
-var contributors = require('getcontributors').create({
+// Create our getcontributors instance
+var getter = require('getcontributors').create({
 	githubClientId: null,      // optional, will try process.env.GITHUB_CLIENT_ID
 	githubClientSecret: null,  // optional, will try process.env.GITHUB_CLIENT_SECRET
 	log: console.log           // optional, arguments: level, message... 
 });
 
 // Fetch all the contributors on these github repositories
-contributors.fetchContributorsFromRepos(['bevry/getcontributors'], function(err){
-	console.log(err);
+getter.fetchContributorsFromRepos(['bevry/getcontributors'], function(err, contributors){
+	console.log(err, contributors);
 
 	// Fetch all the contributors on these github users/organisations
-	contributors.fetchContributorsFromUsers(['bevry'], function(err){
-		console.log(err);
+	getter.fetchContributorsFromUsers(['bevry'], function(err, contributors){
+		console.log(err, contributors);
 
 		// Get the combined listing
-		console.log(contributors.getContributors());
+		console.log(getter.getContributors());
 	});
 });
 ```
