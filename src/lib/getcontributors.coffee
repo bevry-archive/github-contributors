@@ -254,10 +254,12 @@ class Getter
 
 		# Prepare
 		me = @
-		packageUrl = "http://raw.github.com/#{repo}/master/package.json"
+		feedOptions =
+			url: "http://raw.github.com/#{repo}/master/package.json"
+			format: 'json'
 
 		# Read the repo's package file
-		@feedr.readFeed packageUrl, (err,packageData) ->
+		@feedr.readFeed feedOptions, (err,packageData) ->
 			# Ignore if error'd or no result
 			return next(null, [])  if err or !packageData?
 
@@ -313,10 +315,12 @@ class Getter
 
 		# Prepare
 		me = @
-		contributorsUrl = "https://api.github.com/repos/#{repo}/contributors?per_page=100&client_id=#{@config.githubClientId}&client_secret=#{@config.githubClientSecret}"
+		feedOptions =
+			url: "https://api.github.com/repos/#{repo}/contributors?per_page=100&client_id=#{@config.githubClientId}&client_secret=#{@config.githubClientSecret}"
+			parse: 'json'
 
 		# Fetch the repo's contributors
-		@feedr.readFeed contributorsUrl, (err,data) ->
+		@feedr.readFeed feedOptions, (err,data) ->
 			# Check
 			return next(err, [])  if err
 			return next(null, [])  unless data?.length

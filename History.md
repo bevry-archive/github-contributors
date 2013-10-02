@@ -1,5 +1,8 @@
 ## History
 
+- v1.3.1 October 3, 2013
+	- Updated dependencies
+
 - v1.3.0 October 2, 2013
 	- Even more powerful
 	- Updated dependencies
