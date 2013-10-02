@@ -33,7 +33,7 @@
   "dependencies": {
     "extendr": "~2.1.0",
     "taskgroup": "~3.2.3",
-    "typechecker": "~2.0.1",
+    "typechecker": "~2.0.6",
     "feedr": "~2.6.0",
     "getrepos": "~1.0.0"
   },
