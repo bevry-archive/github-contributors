@@ -1,8 +1,19 @@
 {
+  "title": "Get Contributors",
   "name": "getcontributors",
-  "version": "1.3.1",
-  "description": "Fetch the contributors of the repositories of the specified github users",
+  "version": "1.3.2",
+  "description": "Fetch all the contributors of all the specified github users repositories",
   "homepage": "https://github.com/bevry/getcontributors",
+  "license": {
+    "type": "MIT"
+  },
+  "badges": {
+    "travis": true,
+    "npm": true,
+    "gittip": "bevry",
+    "flattr": "344188/balupton-on-Flattr",
+    "paypal": "QB8GQPZAH84N6"
+  },
   "keywords": [
     "contributors",
     "package.json",
@@ -13,7 +24,7 @@
     "owners",
     "maintainers"
   ],
-  "author": "Benjamin Lupton <b@lupton.cc> (http://balupton.com)",
+  "author": "2013+ Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
   "maintainers": [
     "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
   ],
@@ -32,22 +43,23 @@
   },
   "dependencies": {
     "extendr": "~2.1.0",
-    "taskgroup": "~3.2.3",
-    "typechecker": "~2.0.6",
-    "feedr": "~2.7.1",
+    "taskgroup": "~3.3.2",
+    "typechecker": "~2.0.8",
+    "feedr": "~2.7.4",
     "getrepos": "~1.0.3"
   },
   "devDependencies": {
-    "coffee-script": "~1.6.2",
-    "joe": "~1.3.0",
+    "coffee-script": "~1.6.3",
+    "joe": "~1.3.2",
     "joe-reporter-console": "~1.2.1",
-    "chai": "~1.8.0"
+    "chai": "~1.8.1",
+    "projectz": "~0.2.7"
   },
   "directories": {
     "lib": "./out/lib"
   },
   "scripts": {
-    "test": "node ./out/test/everything-test.js"
+    "test": "node ./out/test/getcontributors-test.js"
   },
   "main": "./out/lib/getcontributors.js"
 }
