@@ -1,7 +1,7 @@
 {
   "title": "Get Contributors",
   "name": "getcontributors",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Fetch all the contributors of all the specified github users repositories",
   "homepage": "https://github.com/bevry/getcontributors",
   "license": {
@@ -45,8 +45,8 @@
     "extendr": "~2.1.0",
     "taskgroup": "~3.3.2",
     "typechecker": "~2.0.8",
-    "feedr": "~2.7.4",
-    "getrepos": "~1.0.3"
+    "feedr": "~2.7.5",
+    "getrepos": "~1.0.5"
   },
   "devDependencies": {
     "coffee-script": "~1.6.3",
