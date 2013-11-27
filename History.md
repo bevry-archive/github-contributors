@@ -1,5 +1,8 @@
 # History
 
+- v1.3.3 November 27, 2013
+	- Updated dependencies
+
 - v1.3.2 November 25, 2013
 	- Updated dependencies
 	- Repackaged
