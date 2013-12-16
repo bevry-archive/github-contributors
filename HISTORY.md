@@ -1,5 +1,8 @@
 # History
 
+- v1.3.4 December 16, 2013
+	- Added markdown field to contributor objects
+
 - v1.3.3 November 27, 2013
 	- Updated dependencies
 

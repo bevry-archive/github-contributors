@@ -1,7 +1,7 @@
 {
   "title": "Get Contributors",
   "name": "getcontributors",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "Fetch all the contributors of all the specified github users repositories",
   "homepage": "https://github.com/bevry/getcontributors",
   "license": {
@@ -53,7 +53,7 @@
     "joe": "~1.3.2",
     "joe-reporter-console": "~1.2.1",
     "chai": "~1.8.1",
-    "projectz": "~0.2.7"
+    "projectz": "~0.3.0"
   },
   "directories": {
     "lib": "./out/lib"

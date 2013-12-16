@@ -28,13 +28,9 @@ Fetch all the contributors of all the specified github users repositories
 
 ## Install
 
-### [Node](http://nodejs.org/), [Browserify](http://browserify.org/)
+### [Node](http://nodejs.org/)
 - Use: `require('getcontributors')`
 - Install: `npm install --save getcontributors`
-
-### [Ender](http://ender.jit.su/)
-- Use: `require('getcontributors')`
-- Install: `ender add getcontributors`
 
 <!-- /INSTALL -->
 
@@ -83,7 +79,7 @@ Contributors are returned as an array of contributor objects, here is an example
 <!-- HISTORY/ -->
 
 ## History
-[Discover the change history by heading on over to the `History.md` file.](https://github.com/bevry/getcontributors/blob/master/History.md#files)
+[Discover the change history by heading on over to the `HISTORY.md` file.](https://github.com/bevry/getcontributors/blob/master/HISTORY.md#files)
 
 <!-- /HISTORY -->
 
@@ -92,7 +88,7 @@ Contributors are returned as an array of contributor objects, here is an example
 
 ## Contribute
 
-[Discover how you can contribute by heading on over to the `Contributing.md` file.](https://github.com/bevry/getcontributors/blob/master/Contributing.md#files)
+[Discover how you can contribute by heading on over to the `CONTRIBUTING.md` file.](https://github.com/bevry/getcontributors/blob/master/CONTRIBUTING.md#files)
 
 <!-- /CONTRIBUTE -->
 
@@ -121,7 +117,7 @@ These amazing people have contributed code to this project:
 
 - Benjamin Lupton <b@lupton.cc> (https://github.com/balupton) - [view contributions](https://github.com/bevry/getcontributors/commits?author=balupton)
 
-[Become a contributor!](https://github.com/bevry/getcontributors/blob/master/Contributing.md#files)
+[Become a contributor!](https://github.com/bevry/getcontributors/blob/master/CONTRIBUTING.md#files)
 
 <!-- /BACKERS -->
 

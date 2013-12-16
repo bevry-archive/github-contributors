@@ -138,6 +138,10 @@ class Getter
 		contributorData.text.push("(#{contributorData.url})")
 		contributorData.text = contributorData.text.join(' ') or null
 
+		# Create markdown property
+		contributorData.markdown = "[#{contributorData.name}](#{contributorData.url})"
+		contributorData.markdown += " <#{contributorData.email}>"  if contributorData.email
+
 		# Return
 		return contributorData
 
