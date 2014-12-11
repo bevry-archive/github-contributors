@@ -1,7 +1,7 @@
 {
   "title": "Get Contributors",
   "name": "getcontributors",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "description": "Fetch all the contributors of all the specified github users repositories",
   "homepage": "https://github.com/bevry/getcontributors",
   "license": {
@@ -10,9 +10,14 @@
   "badges": {
     "travis": true,
     "npm": true,
+    "npmdownloads": true,
+    "david": true,
+    "daviddev": true,
     "gittip": "bevry",
     "flattr": "344188/balupton-on-Flattr",
-    "paypal": "QB8GQPZAH84N6"
+    "paypal": "QB8GQPZAH84N6",
+    "bitcoin": "https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a",
+    "wishlist": "http://amzn.com/w/2F8TXKSNAFG4V"
   },
   "keywords": [
     "contributors",
@@ -42,18 +47,18 @@
     "node": ">=0.4"
   },
   "dependencies": {
-    "extendr": "~2.1.0",
-    "taskgroup": "~3.3.2",
-    "typechecker": "~2.0.8",
-    "feedr": "~2.7.5",
-    "getrepos": "~1.0.5"
+    "extendr": "^2.1.0",
+    "taskgroup": "^4.0.5",
+    "typechecker": "^2.0.8",
+    "feedr": "^2.10.3",
+    "getrepos": "^1.0.5"
   },
   "devDependencies": {
-    "coffee-script": "~1.6.3",
-    "joe": "~1.3.2",
+    "coffee-script": "~1.8.0",
+    "joe": "~1.5.0",
     "joe-reporter-console": "~1.2.1",
-    "chai": "~1.8.1",
-    "projectz": "~0.3.0"
+    "chai": "~1.10.0",
+    "projectz": "~0.3.17"
   },
   "directories": {
     "lib": "./out/lib"
