@@ -1,7 +1,7 @@
 {
   "title": "Get Contributors",
   "name": "getcontributors",
-  "version": "1.3.6",
+  "version": "1.3.7",
   "description": "Fetch all the contributors of all the specified github users repositories",
   "homepage": "https://github.com/bevry/getcontributors",
   "license": {
@@ -51,7 +51,7 @@
     "taskgroup": "^4.0.5",
     "typechecker": "^2.0.8",
     "feedr": "^2.10.3",
-    "getrepos": "^1.0.6"
+    "getrepos": "^1.0.7"
   },
   "devDependencies": {
     "coffee-script": "~1.8.0",
@@ -66,5 +66,8 @@
   "scripts": {
     "test": "node ./out/test/getcontributors-test.js"
   },
-  "main": "./out/lib/getcontributors.js"
+  "main": "./out/lib/getcontributors.js",
+  "cakeConfiguration": {
+    "COFFEE_SRC_PATH": "src"
+  }
 }

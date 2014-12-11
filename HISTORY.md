@@ -1,5 +1,8 @@
 # History
 
+## v1.3.7 December 11, 2014
+- Updated dependencies
+
 ## v1.3.6 December 11, 2014
 - Updated dependencies
 
