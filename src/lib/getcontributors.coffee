@@ -223,7 +223,7 @@ class Getter
 		# Prepare
 		me = @
 		result = []
-		tasks = new TaskGroup().setConfig(concurrency:0).once 'complete', (err) ->
+		tasks = new TaskGroup(concurrency:0).done (err) ->
 			return next(err, [])  if err
 			result = me.getContributors(result)
 			return next(null, result)
