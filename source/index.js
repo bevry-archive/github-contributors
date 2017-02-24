@@ -494,6 +494,7 @@ class Getter {
 				contributorData.repos[repo] = `https://github.com/${repo}`
 
 				// Add contributor
+				console.log('debug', contributorData, contributor)
 				const addedContributor = me.addContributor(contributorData)
 				if ( addedContributor ) {
 					addedContributors.push(addedContributor)
