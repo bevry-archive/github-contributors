@@ -139,6 +139,7 @@ class Getter {
 
 		// We need a username
 		if ( !contributorData.username ) {
+			this.log('debug', 'Contributor had no username, skipping add:', contributor)
 			return null
 		}
 
@@ -255,7 +256,6 @@ class Getter {
 		}
 
 		// Convert objects to arrays
-		console.log('257:', Object.keys(contributors))
 		if ( typeChecker.isPlainObject(contributors) ) {
 			contributors = Object.keys(contributors).map((key) => contributors[key])
 		}
@@ -328,23 +328,25 @@ class Getter {
 
 		// Add the contributors for each repo
 		repos.forEach(function (repo) {
-			tasks.addTask(function (complete) {
-				me.fetchContributorsFromPackage(repo, function (err, contributors = []) {
-					if ( err ) {
-						return complete(err)
-					}
-					result.push(...contributors)
-					return complete()
+			tasks.addTaskGroup(`fetch contributors for ${repo}`, function () {
+				this.addTask(`fetch github contributors for ${repo}`, function (complete) {
+					me.fetchContributorsFromRepo(repo, function (err, contributors = []) {
+						if ( err ) {
+							return complete(err)
+						}
+						result.push(...contributors)
+						return complete()
+					})
 				})
-			})
 
-			tasks.addTask(function (complete) {
-				me.fetchContributorsFromRepo(repo, function (err, contributors = []) {
-					if ( err ) {
-						return complete(err)
-					}
-					result.push(...contributors)
-					return complete()
+				this.addTask(`fetch package contributors for ${repo}`, function (complete) {
+					me.fetchContributorsFromPackage(repo, function (err, contributors = []) {
+						if ( err ) {
+							return complete(err)
+						}
+						result.push(...contributors)
+						return complete()
+					})
 				})
 			})
 		})
