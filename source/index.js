@@ -464,8 +464,6 @@ class Getter {
 
 		// Fetch the repo's contributors
 		this.feedr.readFeed(feedOptions, function (err, responseData) {
-			me.log('debug', 'err:', err, 'response data:', require('util').inspect(responseData, {colors: true, depth: 2}))
-
 			// Check
 			if ( err ) {
 				return next(err, [])
@@ -476,7 +474,7 @@ class Getter {
 			else if ( !Array.isArray(responseData) ) {
 				return next(new Error('response was not an array of contributors'), [])
 			}
-			else if ( !responseData.length ) {
+			else if ( responseData.length === 0 ) {
 				return next(null, [])
 			}
 
