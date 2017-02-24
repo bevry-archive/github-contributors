@@ -1,7 +1,7 @@
 # History
 
 ## v1.4.1 2017 February 24
-- Fixed encountering rate limits not causing an error
+- Fixed rate limit errors not being caught
 
 ## v1.4.0 2017 February 24
 - Converted from CoffeeScript to JavaScript
