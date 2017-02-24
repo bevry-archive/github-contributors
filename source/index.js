@@ -158,6 +158,7 @@ class Getter {
 		)
 
 		// Return
+		this.log('debug', 'Added the contributor:', contributor)
 		return this.contributorsMap[contributorData.id]
 	}
 
@@ -240,8 +241,9 @@ class Getter {
 		if ( contributors == null ) {
 			contributors = this.contributorsMap
 		}
+
 		// Remove duplicates from array
-		else if ( typeChecker.isArray(contributors) === true ) {
+		else if ( typeChecker.isArray(contributors) ) {
 			const exists = {}
 			contributors = contributors.filter(function (contributor) {
 				if ( exists[contributor.username] == null ) {
@@ -253,7 +255,8 @@ class Getter {
 		}
 
 		// Convert objects to arrays
-		if ( typeChecker.isPlainObject(contributors) === true ) {
+		console.log('257:', Object.keys(contributors))
+		if ( typeChecker.isPlainObject(contributors) ) {
 			contributors = Object.keys(contributors).map((key) => contributors[key])
 		}
 
