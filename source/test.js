@@ -30,7 +30,7 @@ joe.suite('getcontributors', function (suite, test) {
 		test('combined result', function () {
 			const result = getter.getContributors()
 			equal(getType(result), 'array', 'result is array')
-			equal(result.length > 0, true, `length to be more than 0, it was ${result.length}`
+			equal(result.length > 0, true, `length to be more than 0, it was ${result.length}`)
 		})
 	})
 
@@ -47,7 +47,7 @@ joe.suite('getcontributors', function (suite, test) {
 		test('combined result', function () {
 			const result = getter.getContributors()
 			equal(getType(result), 'array', 'result is array')
-			equal(result.length > 0, true, `length to be more than 0, it was ${result.length}`
+			equal(result.length > 0, true, `length to be more than 0, it was ${result.length}`)
 		})
 	})
 })
