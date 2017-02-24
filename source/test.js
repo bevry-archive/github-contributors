@@ -36,7 +36,7 @@ joe.suite('getcontributors', function (suite, test) {
 	// Fetch all the contributors on these github users/organisations
 	suite('users', function (suite, test) {
 		test('fetch', function (done) {
-			getter.fetchContributorsFromUsers(['docpad'], function (err) {
+			getter.fetchContributorsFromUsers(['browserstate'], function (err) {
 				errorEqual(err, null)
 				return done()
 			})
