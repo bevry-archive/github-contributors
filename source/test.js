@@ -21,6 +21,7 @@ joe.suite('getcontributors', function (suite, test) {
 	suite('repo', function (suite, test) {
 		test('fetch', function (done) {
 			getter.fetchContributorsFromRepos(['bevry/getcontributors'], function (err) {
+				console.log('err:', err)
 				errorEqual(err, null)
 				return done()
 			})
@@ -29,7 +30,7 @@ joe.suite('getcontributors', function (suite, test) {
 		test('combined result', function () {
 			const result = getter.getContributors()
 			equal(getType(result), 'array', 'result is array')
-			equal(result.length > 0, true, 'to have a length more than 0')
+			equal(result.length > 0, true, `length to be more than 0, it was ${result.length}`
 		})
 	})
 
@@ -37,6 +38,7 @@ joe.suite('getcontributors', function (suite, test) {
 	suite('users', function (suite, test) {
 		test('fetch', function (done) {
 			getter.fetchContributorsFromUsers(['docpad'], function (err) {
+				console.log('err:', err)
 				errorEqual(err, null)
 				return done()
 			})
@@ -45,7 +47,7 @@ joe.suite('getcontributors', function (suite, test) {
 		test('combined result', function () {
 			const result = getter.getContributors()
 			equal(getType(result), 'array', 'result is array')
-			equal(result.length > 0, true, 'to have a length more than 0')
+			equal(result.length > 0, true, `length to be more than 0, it was ${result.length}`
 		})
 	})
 })
