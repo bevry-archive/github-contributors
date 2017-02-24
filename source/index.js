@@ -464,6 +464,8 @@ class Getter {
 
 		// Fetch the repo's contributors
 		this.feedr.readFeed(feedOptions, function (err, responseData) {
+			me.log('debug', 'response data:', require('util').inspect(responseData, {colors: true, depth: 2}))
+
 			// Check
 			if ( err ) {
 				return next(err, [])
@@ -494,7 +496,6 @@ class Getter {
 				contributorData.repos[repo] = `https://github.com/${repo}`
 
 				// Add contributor
-				console.log('debug', contributorData, contributor)
 				const addedContributor = me.addContributor(contributorData)
 				if ( addedContributor ) {
 					addedContributors.push(addedContributor)
