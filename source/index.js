@@ -462,12 +462,18 @@ class Getter {
 			if ( err ) {
 				return next(err, [])
 			}
-			if ( !responseData || responseData.length === 0 ) {
+			if ( !responseData || !responseData.length ) {
 				return next(null, [])
 			}
 
 			// Prepare
 			const addedContributors = []
+
+			// Check
+			if ( !responseData.forEach ) {
+				const error = new Error('response data was not an array: ' + require('util').inspect(responseData, {colors: true, depth: 2}))
+				return next(error)
+			}
 
 			// Extract the correct data from the contributors
 			responseData.forEach(function (contributor) {
