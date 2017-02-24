@@ -261,6 +261,7 @@ class Getter {
 		}
 
 		// Prepare the contributors that were passed in
+		this.log('debug', `Preparing the ${contributors.length} contributors for the final time`)
 		contributors = contributors.map(this.prepareContributorFinale.bind(this)).sort(contributorsComparator)
 
 		// Return
