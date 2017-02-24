@@ -24,6 +24,9 @@ matrix:
 cache:
   directories:
     - node_modules
+    - /home/travis/tmp  # feedr cache
+    - /home/travis/.nvm  # cache npm global
+    - $HOME/.npm  # npm's cache
 
 
 install: |
