@@ -1,5 +1,8 @@
 # History
 
+## v1.4.1 2017 February 24
+- Fixed encountering rate limits not causing an error
+
 ## v1.4.0 2017 February 24
 - Converted from CoffeeScript to JavaScript
 - Fixed `fetchContributorsFromPackage` possibly not calling the completion callback under certain circumstances

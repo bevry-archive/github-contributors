@@ -121,22 +121,18 @@ after_success: |
 
 
 # Custom Configuration
+# https://github.com/bevry/base#configuration
 env:
   global:
   # Release to NPM
   # https://github.com/balupton/awesome-travis#release-to-npm
-  # travis encrypt "NPM_USERNAME=$NPM_USERNAME" --add env.global
-  # travis encrypt "NPM_PASSWORD=$NPM_PASSWORD" --add env.global
-  # travis encrypt "NPM_EMAIL=$NPM_EMAIL" --add env.global
-  - secure: DsfX19j3KYT+gtbaUJnrIS2k1ZO1/mkDSF7bEdU9vE/ee/pGxtwHOUVu0b1DHklrZraUKj6U0mFKYOHJoDyy+K1SKz34YaaZsrrR3T44cQ1W/xo/I6nlLoUTai+jYRswNAl7U+ZBUgAGJVd/cLDFDM12/3RhJ7CYwCRdscGzkJ0=
-  - secure: I4HRfIjjp3x/1Bh6dxTPJyME3TLzj4gmkwG8evAbuV7IzeRa/utL9/UAnWCysLpQgYDF94wfsd/oNguge3cLEofYSnhsy/QAs1tYMrW6bGMp5pI26IO3A7o1y05jEYFpq7Q3T6xx7c+Aw3BbTF3bYAuufVAy+XKhdm4c1T0WTaA=
-  - secure: J2uGsaQbn07J8oJCWiOHH4bUiEw/hSkvBc7d5A5dUlpQjTiGb0PVhDMqAAY1Pn3h40xsJpPTIbKDhwW90Q+ySGikgppCAP/kBIoGe6/R8Vfj7heInRo/Y6MKtPL/ZbM1FYLJmsMsPGzgMAyeoFdPdO6ctz1gpH6g/gYtqjBRubs=
+  - secure: iqrGTpYW6wbW1d54uwz6Agt7ksyUUCkZCqc40Vgp9+T/v3/0nhETqPtOsIgmFACwNCLYhK0BWyBEPUdsUeS+cX7zwtDAY4WJpx1qfky5D54CRIeT77572Vat5aqpUAjgcwo1oBgRFn9bqVfLnkJ/iltLTddbRIxmGV3NeYyiMtc=
+  - secure: MSMX6BCqyOroLHtAqXmQkAx7C7LCgzkZbudKbeCrdDYtyfh0780QbgS79/LwcmCmWYiQyQR4uH5LGh/lJkjthsuMO3WPqbQLJFF2x3V4ePFUT3t1BOnZxe+ixaRVgxSMLnEaUPDOwhdbXmw6tTkSnN+eeIykxLfq4MBttFViXWU=
+  - secure: jbIvgG1/OROrFg5n3vadCuGq59QV3p3RMQuvDvlyWb5z86jb4ZbupcdcKDFb85uYjQ07oDhH25apD2DcfzgYlzYtQL52gOgySsyDRN0mK8ZzNi/XbMISU/UUYu8suGhM5StfnszgLIJY1AGlB/MSfhWTdsRF38/VnbwcnO9Lygo=
   # Release to Surge
   # https://github.com/balupton/awesome-travis#release-to-surge
-  # travis encrypt "SURGE_LOGIN=$SURGE_LOGIN" --add env.global
-  # travis encrypt "SURGE_TOKEN=$SURGE_TOKEN" --add env.global
-  - secure: T+VpYs+UPUJCxpaMfDPw0YqtghZvvD/B8nJNIVzvTAMudO9JPpJjCCNl4Sc3uVDjcbKCTJLFgXnkZaB+nhqHamt5oXd9q4/LyrlxepL71Z5r0SDvisv8DwKmmnyWY4jarhY8FgvFW+jxAOHbalHINN6njv+XnXi4gS9guHOp3FE=
-  - secure: GnypYRdtkuLOHJMxDaZVvDWncAJY9EivKmrzC9wcOm1lZPBvTn0HTtK4dIhHO0VRQqgPMHoV9fY+MSMz3A9X5HOjKySM5dL7x/t3lgcEQkjFPbF8lAoKQtD70XANixoUBwiyuz/I7RP922WnHjPf3mS1ExARQj6/J9drYZIltuY=
+  - secure: MoO8dASO4WNJ96FtkaaZdfgybwiIEe97vQ1d5tNbq6NS7k677avFzVaVfeD2me7VJl+EKZ+BXG/QTgPeB2jNHCd3OmuMUftmC/iZzOK6dugckhoKdkGm42Z2uidFLvx3WeAlNsamrwYOMHvp//JUXvuZNfv/SCuDhPxSHeBW8ns=
+  - secure: ag8kGivu2T6Sj/vjHePG0H3KkcO8VEESCJp3eEGeDixYh5NLwXjIPDReDQ421LbiCFaMNEznelOIty4/Qf8IRWV37pnBRSAwE5QUMHTp/XGJIdlXp50U/EdaQBbvFddWgUwd8wii+Ul4TtpRgLxrO8pGth62Lu6OiSw5IYoVLO8=
   # Custom Configuration for this repository
   # travis encrypt "GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID" --add env.global
   # travis encrypt "GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET" --add env.global

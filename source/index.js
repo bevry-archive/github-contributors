@@ -328,25 +328,23 @@ class Getter {
 
 		// Add the contributors for each repo
 		repos.forEach(function (repo) {
-			tasks.addTaskGroup(`fetch contributors for ${repo}`, function () {
-				this.addTask(`fetch github contributors for ${repo}`, function (complete) {
-					me.fetchContributorsFromRepo(repo, function (err, contributors = []) {
-						if ( err ) {
-							return complete(err)
-						}
-						result.push(...contributors)
-						return complete()
-					})
+			tasks.addTask(`fetch github contributors for ${repo}`, function (complete) {
+				me.fetchContributorsFromRepo(repo, function (err, contributors = []) {
+					if ( err ) {
+						return complete(err)
+					}
+					result.push(...contributors)
+					return complete()
 				})
+			})
 
-				this.addTask(`fetch package contributors for ${repo}`, function (complete) {
-					me.fetchContributorsFromPackage(repo, function (err, contributors = []) {
-						if ( err ) {
-							return complete(err)
-						}
-						result.push(...contributors)
-						return complete()
-					})
+			tasks.addTask(`fetch package contributors for ${repo}`, function (complete) {
+				me.fetchContributorsFromPackage(repo, function (err, contributors = []) {
+					if ( err ) {
+						return complete(err)
+					}
+					result.push(...contributors)
+					return complete()
 				})
 			})
 		})
