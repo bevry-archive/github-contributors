@@ -1,359 +1,501 @@
-# Fetch contributors for all repos of the users
-# Opts =
-# - users: array of the users to fetch contributors for
-# - github_client_id
-# - github_client_secret
-# - log: log function
-# Next =
-# - err: error or null
-# - contributors: an array of contributor objects
-# Contributor =
-# - name
-# - email
-# - url
-# - username
-# - text
-# - repos
+'use strict'
 
-# Import
-typeChecker = require('typechecker')
-extendr = require('extendr')
-{TaskGroup} = require('taskgroup')
+// Import
+const typeChecker = require('typechecker')
+const extendr = require('extendr')
+const {TaskGroup} = require('taskgroup')
 
-# Getter
-class Getter
-	# Contributors
-	# Object listing of all the contributors, indexed by their lowercase username
-	contributorsMap: null  # {}
+/**
+Compare two contributor entities for sorting in an array
+@param {Contributor} a
+@param {Contributor} b
+@return {number} either 0, -1, or 1
+@access private
+*/
+function contributorsComparator (a, b) {
+	const A = a.name.toLowerCase()
+	const B = b.name.toLowerCase()
+	if ( A === B ) {
+		return 0
+	}
+	else if ( A < B ) {
+		return -1
+	}
+	else {
+		return 1
+	}
+}
 
-	# Config
-	config: null  # {}
+/**
+Clone a contributor to prevent reference issues
+@param {Contributor} contributor
+@return {Contributor}
+@access private
+*/
+function cloneContributor (contributor) {
+	// Clone
+	const contributorData = extendr.deepDefaults({
+		name: null,
+		email: null,
+		url: null,
+		username: null,
+		text: null,
+		repos: null
+	}, contributor)
 
-	# Constructor
-	# Create a new contributors instance
-	# opts={githubClientId, githubClientSecret} - also forwarded onto feedr
-	constructor: (opts={}) ->
-		# Prepare
-		@config = {}
-		@contributorsMap = {}
-		@reposGetter = require('getrepos').create(opts)
+	// Return
+	return contributorData
+}
 
-		# Extend configuration
-		extendr.extend(@config, opts)
+/**
+Get Contributors Class
 
-		# Try env for github credentials
-		@config.githubClientId ?= process.env.GITHUB_CLIENT_ID or null
-		@config.githubClientSecret ?= process.env.GITHUB_CLIENT_SECRET or null
+A class as it contains a config object, as well as a contributorsMap object.
 
-		# Feedr
-		@feedr = new (require('feedr').Feedr)(@config)
+Configuration details can be found in the constructor definition.
 
-		# Chain
-		@
+Configuration is also forwarded onto https://github.com/bevry/feedr which we use for fetching data.
 
-	# Log
-	log: (args...) ->
-		@config.log?(args...)
-		@
+The contributorsMap object is used to prevent duplicates when fetching contributor data, and to merge data together in case some was missing somewhere but provided elsewhere.
 
-	# Add a contributor to the internal listing and finish preparing it
-	# contributor = {}
-	# return {}
-	addContributor: (contributor) ->
-		# Log
-		@log 'debug', 'Adding the contributor:', contributor
+Contributors have the following properties:
 
-		# Prepare
-		contributorData = @prepareContributor(contributor)
+- name
+- email
+- url
+- username
+- text (a string formatted like `NAME <EMAIL> (URL)` for use in package.json fields)
+- repos
 
-		# We need a username
-		return null  unless contributorData.username
+@constructor
+@class Getter
+@access public
+*/
+class Getter {
+	/**
+	Creates and returns new instance of the current class.
+	@param {...*} args - The arguments to be forwarded along to the constructor.
+	@return {Object} The new instance.
+	@static
+	@access public
+	*/
+	static create (...args) {
+		return new this(...args)
+	}
 
-		# Find existing contributor
+	/**
+	Forward the arguments onto the configured logger if it exists.
+	@param {Object} [opts]
+	@param {Function} [opts.log] - defaults to `null`, can be a function that receives the arguments: `logLevel`, `...args`
+	@param {string} [opts.githubClientId] - defaults to the environment variable `GITHUB_CLIENT_ID` or `null`
+	@param {string} [opts.githubClientSecret] - defaults to environment variable `GITHUB_CLIENT_SECRET` or `null`
+	@access public
+	*/
+	constructor (opts = {}) {
+		// Prepare
+		this.config = {
+			githubClientId: process.env.GITHUB_CLIENT_ID || null,
+			githubClientSecret: process.env.GITHUB_CLIENT_SECRET || null
+		}
+		this.contributorsMap = {}
+		this.reposGetter = require('getrepos').create(opts)
+
+		// Extend configuration
+		extendr.extend(this.config, opts)
+
+		// Feedr
+		this.feedr = require('feedr').create(this.config)
+
+		// Chain
+		return this
+	}
+
+	/**
+	Forward the arguments onto the configured logger if it exists.
+	@param {...*} args
+	@chainable
+	@returns {this}
+	@access private
+	*/
+	log (...args) {
+		if ( this.config.log ) {
+			this.config.log(...args)
+		}
+		return this
+	}
+
+	/**
+	Add a contributor to the internal listing and finish preparing it
+	@param {Contributor} [contributor]
+	@returns {Contributor}
+	@access private
+	*/
+	addContributor (contributor) {
+		// Log
+		this.log('debug', 'Adding the contributor:', contributor)
+
+		// Prepare
+		const contributorData = this.prepareContributor(contributor)
+
+		// We need a username
+		if ( !contributorData.username ) {
+			return null
+		}
+
+		// Find existing contributor
 		contributorData.id = contributorData.username.toLowerCase()
-		existingContributorData = @contributorsMap[contributorData.id] ?= {}
+		const existingContributorData = this.contributorsMap[contributorData.id] = (
+			this.contributorsMap[contributorData.id] || {}
+		)
 
-		# Merge contributorData into the existingContributorData
-		extendr.safeDeepExtendPlainObjects(existingContributorData, contributorData)
+		// Merge contributorData into the existingContributorData
+		extendr.deepDefaults(existingContributorData, contributorData)
 
-		# Update references in database
-		@contributorsMap[contributorData.id] = existingContributorData
-		@contributorsMap[contributorData.id].repos ?= {}
+		// Update references in database
+		this.contributorsMap[contributorData.id] = existingContributorData
+		this.contributorsMap[contributorData.id].repos = (
+			this.contributorsMap[contributorData.id].repos || {}
+		)
 
-		# Return
-		return @contributorsMap[contributorData.id]
+		// Return
+		return this.contributorsMap[contributorData.id]
+	}
 
-	# Clone Contributor
-	cloneContributor: (contributor) ->
-		# Clone
-		contributorData = extendr.safeDeepExtendPlainObjects({
-			name: null
-			email: null
-			url: null
-			username: null
-			text: null
-			repos: null
-		}, contributor)
+	/**
+	Prepare a contributor by setting and determing some defaults
+	@param {Contributor} [contributor]
+	@returns {Contributor}
+	@access private
+	*/
+	prepareContributor (contributor) {
+		// Log
+		this.log('debug', 'Preparing the contributor:', contributor)
 
-		# Return
+		// Prepare
+		const contributorData = cloneContributor(contributor)
+
+		// Extract username
+		if ( contributorData.url && contributorData.username == null ) {
+			const usernameMatch = (/^.+?github.com\/([^/]+).*$/).exec(contributorData.url)
+			if ( usernameMatch ) {
+				contributorData.username = (usernameMatch[1] || '').trim() || null
+			}
+		}
+
+		// Return
 		return contributorData
+	}
 
-	# Prepare a contributor by setting and determing some defaults
-	# contributor = {}
-	# return {}
-	prepareContributor: (contributor) ->
-		# Log
-		@log 'debug', 'Preparing the contributor:', contributor
+	/**
+	Prepare a contributor for return to the user, assume we have no more data, so determine the rest
+	@param {Contributor} [contributor]
+	@returns {Contributor}
+	@access private
+	*/
+	prepareContributorFinale (contributor) {
+		// Log
+		this.log('debug', 'Preparing the contributor for the final time:', contributor)
 
-		# Prepare
-		contributorData = @cloneContributor(contributor)
+		// Prepare
+		const contributorData = cloneContributor(contributor)
 
-		# Extract username
-		if contributorData.url and contributorData.username is null
-			usernameMatch = /^.+?github.com\/([^\/]+).*$/.exec(contributorData.url)
-			if usernameMatch
-				contributorData.username = (usernameMatch[1] or '').trim() or null
+		// Fallbacks
+		contributorData.name = (
+			contributorData.name || contributorData.username
+		)
+		contributorData.url = (
+			contributorData.url || `https://github.com/${contributorData.username}`
+		)
 
-		# Return
-		return contributorData
-
-	# Prepare a contributor for return to the user, assume we have no more data, so determine the rest
-	# contributorData = {}
-	# return {}
-	prepareContributorFinale: (contributor) ->
-		# Log
-		@log 'debug', 'Preparing the contributor for the final time:', contributor
-
-		# Prepare
-		contributorData = @cloneContributor(contributor)
-
-		# Fallbacks
-		contributorData.name or= contributorData.username
-		contributorData.url  or= "https://github.com/#{contributorData.username}"
-
-		# Create text property
+		// Create text property
 		contributorData.text = []
 		contributorData.text.push(contributorData.name)
-		contributorData.text.push("<#{contributorData.email}>")  if contributorData.email
-		contributorData.text.push("(#{contributorData.url})")
-		contributorData.text = contributorData.text.join(' ') or null
+		if ( contributorData.email ) {
+			contributorData.text.push(`<${contributorData.email}>`)
+		}
+		contributorData.text.push(`(${contributorData.url})`)
+		contributorData.text = contributorData.text.join(' ') || null
 
-		# Create markdown property
-		contributorData.markdown = "[#{contributorData.name}](#{contributorData.url})"
-		contributorData.markdown += " <#{contributorData.email}>"  if contributorData.email
+		// Create markdown property
+		contributorData.markdown = `[${contributorData.name}](${contributorData.url})`
+		if ( contributorData.email ) {
+			contributorData.markdown += ` <${contributorData.email}>`
+		}
 
-		# Return
+		// Return
 		return contributorData
+	}
 
-	# Get the contributors
-	# return []
-	getContributors: (contributors) ->
-		# Log
-		@log 'debug', 'Get contributors'
+	/**
+	Prepare a contributor for return to the user, assume we have no more data, so determine the rest
+	@param {Array} [contributors] - array of {Contributor}
+	@returns {Array} - array of {Contributor}
+	@access private
+	*/
+	getContributors (contributors) {
+		// Log
+		this.log('debug', 'Get contributors')
 
-		# Prepare
-		contributorsComparator = (a,b) ->
-			A = a.name.toLowerCase()
-			B = b.name.toLowerCase()
-			if A is B
-				0
-			else if A < B
-				-1
-			else
-				1
+		// Allow the user to pass in their own contributors array or object
+		if ( contributors == null ) {
+			contributors = this.contributorsMap
+		}
+		// Remove duplicates from array
+		else if ( typeChecker.isArray(contributors) === true ) {
+			const exists = {}
+			contributors = contributors.filter(function (contributor) {
+				if ( exists[contributor.username] == null ) {
+					exists[contributor.username] = 0
+				}
+				++exists[contributor.username]
+				return exists[contributor.username] === 1
+			})
+		}
 
-		# Allow the user to pass in their own contributors array or object
-		if contributors? is false
-			contributors = @contributorsMap
-		else
-			# Remove duplicates from array
-			if typeChecker.isArray(contributors) is true
-				exists = {}
-				contributors = contributors.filter (contributor) ->
-					exists[contributor.username] ?= 0
-					++exists[contributor.username]
-					return exists[contributor.username] is 1
-
-		# Convert objects to arrays
-		if typeChecker.isPlainObject(contributors) is true
+		// Convert objects to arrays
+		if ( typeChecker.isPlainObject(contributors) === true ) {
 			contributors = Object.keys(contributors).map((key) => contributors[key])
+		}
 
-		# Prepare the contributors that were passed in
-		contributors = contributors.map(@prepareContributorFinale.bind(@)).sort(contributorsComparator)
+		// Prepare the contributors that were passed in
+		contributors = contributors.map(this.prepareContributorFinale.bind(this)).sort(contributorsComparator)
 
-		# Return
+		// Return
 		return contributors
+	}
 
-	# Fetch Contributors From Users
-	# repos=["bevry"]
-	# next(err)
-	# return @
-	fetchContributorsFromUsers: (users,next) ->
-		# Log
-		@log 'debug', 'Get contributors from users:', users
+	/**
+	Fetch Contributors from Usernames
+	@param {Array} [users] - array of {string} user names, such as `['bevry', 'balupton']`
+	@param {Function} [next] - completion callback, accepts the arguments:
+	@param {Error} [next.error] - if the procedure failed, this is the error instance, otherwise `null`
+	@param {Array} [next.result] - if the procedure succedeed, this is the array of contributors
+	@chainable
+	@returns {this}
+	@access public
+	*/
+	fetchContributorsFromUsers (users, next) {
+		// Log
+		this.log('debug', 'Get contributors from users:', users)
 
-		# Prepare
-		me = @
+		// Fetch
+		this.reposGetter.fetchReposFromUsers(users, (err, repos) => {
+			// Check
+			if ( err ) {
+				return next(err, [])
+			}
 
-		# Fetch
-		@reposGetter.fetchReposFromUsers users, (err,repos) ->
-			# Check
-			return next(err, [])  if err
+			// Filter out forks, return just their names
+			const repoNames = repos
+				.filter((repo) => repo.fork !== true)
+				.map((repo) => repo.full_name)
 
-			# Filter out forks, return just their names
-			repoNames =
-				for repo in repos
-					continue  if repo.fork is true
-					repo.full_name
+			// Fetch the contributors for the repos
+			return this.fetchContributorsFromRepos(repoNames, next)
+		})
 
-			# Fetch the contributors for the repos
-			return me.fetchContributorsFromRepos(repoNames, next)
+		// Chain
+		return this
+	}
 
-		# Chain
-		@
+	/**
+	Fetch Contributors from Repository Names
+	@param {Array} [repos] - array of {string} repository names, such as `['bevry/getcontributors', 'bevry/getrepos']`
+	@param {Function} [next] - completion callback, accepts the arguments:
+	@param {Error} [next.error] - if the procedure failed, this is the error instance, otherwise `null`
+	@param {Array} [next.result] - if the procedure succedeed, this is the array of contributors
+	@chainable
+	@returns {this}
+	@access public
+	*/
+	fetchContributorsFromRepos (repos, next) {
+		// Log
+		this.log('debug', 'Get contributors from repos:', repos)
 
-	# Fetch Contributors From Repos
-	# repos=["bevry/getcontributors"]
-	# next(err)
-	# return @
-	fetchContributorsFromRepos: (repos,next) ->
-		# Log
-		@log 'debug', 'Get contributors from repos:', repos
+		// Prepare
+		const me = this
+		const result = []
+		const tasks = TaskGroup.create({concurrency: 0}).done(function (err) {
+			if ( err ) {
+				return next(err, [])
+			}
+			return next(null, me.getContributors(result))
+		})
 
-		# Prepare
-		me = @
-		result = []
-		tasks = new TaskGroup(concurrency:0).done (err) ->
-			return next(err, [])  if err
-			result = me.getContributors(result)
-			return next(null, result)
-
-		# Add the contributors for each repo
-		repos.forEach (repo) ->
-			tasks.addTask (complete) ->
-				me.fetchContributorsFromPackage repo, (err,contributors=[]) ->
-					return complete(err)  if err
-					result.push(contributors...)
+		// Add the contributors for each repo
+		repos.forEach(function (repo) {
+			tasks.addTask(function (complete) {
+				me.fetchContributorsFromPackage(repo, function (err, contributors = []) {
+					if ( err ) {
+						return complete(err)
+					}
+					result.push(...contributors)
 					return complete()
+				})
+			})
 
-			tasks.addTask (complete) ->
-				me.fetchContributorsFromRepo repo, (err,contributors=[]) ->
-					return complete(err)  if err
-					result.push(contributors...)
+			tasks.addTask(function (complete) {
+				me.fetchContributorsFromRepo(repo, function (err, contributors = []) {
+					if ( err ) {
+						return complete(err)
+					}
+					result.push(...contributors)
 					return complete()
+				})
+			})
+		})
 
-		# Start
+		// Start
 		tasks.run()
 
-		# Chain
-		@
+		// Chain
+		return this
+	}
 
-	# Fetch Contributors from Package
-	# repo="bevry/getcontributors"
-	# next(err)
-	# return @
-	fetchContributorsFromPackage: (repo,next) ->
-		# Log
-		@log 'debug', 'Get contributors from package:', repo
+	/**
+	Fetch Contributors from a Repository's package.json file if it has one
+	@param {string} [repo] - repository name such as `'bevry/getcontributors'`
+	@param {Function} [next] - completion callback, accepts the arguments:
+	@param {Error} [next.error] - if the procedure failed, this is the error instance, otherwise `null`
+	@param {Array} [next.result] - if the procedure succedeed, this is the array of contributors
+	@chainable
+	@returns {this}
+	@access public
+	*/
+	fetchContributorsFromPackage (repo, next) {
+		// Log
+		this.log('debug', 'Get contributors from package:', repo)
 
-		# Prepare
-		me = @
-		feedOptions =
-			url: "http://raw.github.com/#{repo}/master/package.json"
-			format: 'json'
-
-		# Read the repo's package file
-		@feedr.readFeed feedOptions, (err,packageData) ->
-			# Ignore if error'd or no result
-			return next(null, [])  if err or !packageData?
-
-			# Prepare
-			addedContributors = []
-
-			# Add each of the contributors
-			for contributor in [].concat(packageData.contributors or []).concat(packageData.maintainers or [])
-				# Prepare
-				contributorData = {}
-
-				# Extract
-				if typeChecker.isString(contributor)
-					contributorMatch = /^([^<(]+)\s*(?:<(.+?)>)?\s*(?:\((.+?)\))?$/.exec(contributor)
-					continue  unless contributorMatch
-					contributorData =
-						name: (contributorMatch[1] or '').trim() or null
-						email: (contributorMatch[2] or '').trim() or null
-						url: (contributorMatch[3] or '').trim() or null
-						repos: {}
-
-				else if typeChecker.isPlainObject(contributor)
-					contributorData =
-						name: contributor.name or null
-						email: contributor.email or null
-						url: contributor.web or null
-						username: contributor.username or null
-						repos: {}
-
-				else
-					continue
-
-				# Add repo
-				contributorData.repos[repo] = "https://github.com/#{repo}"
-
-				# Add contributor
-				addedContributor = me.addContributor(contributorData)
-				addedContributors.push(addedContributor)  if addedContributor
-
-			# Return contributors
-			return next(null, addedContributors)
-
-		# Chain
-		@
-
-	# Fetch Contributors from Repository
-	# repo="bevry/getcontributors"
-	# next(err)
-	# return @
-	fetchContributorsFromRepo: (repo,next) ->
-		# Log
-		@log 'debug', 'Get contributors from repo:', repo
-
-		# Prepare
-		me = @
-		feedOptions =
-			url: "https://api.github.com/repos/#{repo}/contributors?per_page=100&client_id=#{@config.githubClientId}&client_secret=#{@config.githubClientSecret}"
+		// Prepare
+		const me = this
+		const feedOptions = {
+			url: `http://raw.github.com/${repo}/master/package.json`,
 			parse: 'json'
+		}
 
-		# Fetch the repo's contributors
-		@feedr.readFeed feedOptions, (err,data) ->
-			# Check
-			return next(err, [])  if err
-			return next(null, [])  unless data?.length
+		// Read the repo's package file
+		this.feedr.readFeed(feedOptions, function (err, packageData) {
+			// Ignore if error'd or no result
+			if ( err || !packageData ) {
+				return next(err, [])
+			}
 
-			# Prepare
-			addedContributors = []
+			// Prepare
+			const addedContributors = []
 
-			# Extract the correct data from the contributors
-			for contributor in data
-				# Prepare
-				contributorData =
-					url: contributor.html_url
-					username: contributor.login
-					repos: {}
+			// Add each of the contributors
+			const everyone = (packageData.contributors || []).concat(packageData.maintainers || [])
+			everyone.forEach(function (contributor) {
+				// Prepare
+				let contributorData = {}
 
-				# Add repo
-				contributorData.repos[repo] = "https://github.com/#{repo}"
+				// Extract
+				if ( typeChecker.isString(contributor) ) {
+					const contributorMatch = (/^([^<(]+)\s*(?:<(.+?)>)?\s*(?:\((.+?)\))?$/).exec(contributor)
+					if ( !contributorMatch ) {
+						return
+					}
+					contributorData = {
+						name: (contributorMatch[1] || '').trim() || null,
+						email: (contributorMatch[2] || '').trim() || null,
+						url: (contributorMatch[3] || '').trim() || null,
+						repos: {}
+					}
+				}
 
-				# Add contributor
-				addedContributor = me.addContributor(contributorData)
-				addedContributors.push(addedContributor)  if addedContributor
+				else if ( typeChecker.isPlainObject(contributor) ) {
+					contributorData = {
+						name: contributor.name || null,
+						email: contributor.email || null,
+						url: contributor.web || null,
+						username: contributor.username || null,
+						repos: {}
+					}
+				}
 
-			# Return contributors
+				else {
+					return
+				}
+
+				// Add repo
+				contributorData.repos[repo] = `https://github.com/${repo}`
+
+				// Add contributor
+				const addedContributor = me.addContributor(contributorData)
+				if ( addedContributor ) {
+					addedContributors.push(addedContributor)
+				}
+			})
+
+			// Return contributors
 			return next(null, addedContributors)
+		})
 
-		# Chain
-		@
+		// Chain
+		return this
+	}
 
-# Export
-module.exports =
-	create: (args...) ->
-		return new Getter(args...)
+	/**
+	Fetch Contributors from a Repository's GitHub Contributor API
+	@param {string} [repo] - repository name such as `'bevry/getcontributors'`
+	@param {Function} [next] - completion callback, accepts the arguments:
+	@param {Error} [next.error] - if the procedure failed, this is the error instance, otherwise `null`
+	@param {Array} [next.result] - if the procedure succedeed, this is the array of contributors
+	@chainable
+	@returns {this}
+	@access public
+	*/
+	fetchContributorsFromRepo (repo, next) {
+		// Log
+		this.log('debug', 'Get contributors from repo:', repo)
+
+		// Prepare
+		const me = this
+		const feedOptions = {
+			url: `https://api.github.com/repos/${repo}/contributors?per_page=100&client_id=${this.config.githubClientId}&client_secret=${this.config.githubClientSecret}`,
+			parse: 'json'
+		}
+
+		// Fetch the repo's contributors
+		this.feedr.readFeed(feedOptions, function (err, responseData) {
+			// Check
+			if ( err ) {
+				return next(err, [])
+			}
+			if ( !responseData || responseData.length === 0 ) {
+				return next(null, [])
+			}
+
+			// Prepare
+			const addedContributors = []
+
+			// Extract the correct data from the contributors
+			responseData.forEach(function (contributor) {
+				// Prepare
+				const contributorData = {
+					url: contributor.html_url,
+					username: contributor.login,
+					repos: {}
+				}
+
+				// Add repo
+				contributorData.repos[repo] = `https://github.com/${repo}`
+
+				// Add contributor
+				const addedContributor = me.addContributor(contributorData)
+				if ( addedContributor ) {
+					addedContributors.push(addedContributor)
+				}
+			})
+
+			// Return contributors
+			return next(null, addedContributors)
+		})
+
+		// Chain
+		return this
+	}
+}
+
+// Export
+module.exports = Getter
