@@ -13,7 +13,7 @@ joe.suite('getcontributors', function (suite, test) {
 	// Create our contributors instance
 	test('create', function () {
 		getter = require('../').create({
-			// log: console.log
+			log: console.log
 		})
 	})
 
@@ -21,7 +21,6 @@ joe.suite('getcontributors', function (suite, test) {
 	suite('repo', function (suite, test) {
 		test('fetch', function (done) {
 			getter.fetchContributorsFromRepos(['bevry/getcontributors'], function (err) {
-				console.log('err:', err)
 				errorEqual(err, null)
 				return done()
 			})
@@ -38,7 +37,6 @@ joe.suite('getcontributors', function (suite, test) {
 	suite('users', function (suite, test) {
 		test('fetch', function (done) {
 			getter.fetchContributorsFromUsers(['docpad'], function (err) {
-				console.log('err:', err)
 				errorEqual(err, null)
 				return done()
 			})
