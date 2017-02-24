@@ -464,6 +464,8 @@ class Getter {
 
 		// Fetch the repo's contributors
 		this.feedr.readFeed(feedOptions, function (err, responseData) {
+			me.log('debug', 'err:', err, 'response data:', require('util').inspect(responseData, {colors: true, depth: 2}))
+
 			// Check
 			if ( err ) {
 				return next(err, [])
