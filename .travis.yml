@@ -120,8 +120,10 @@ after_success: |
   fi
 
 
+# ========================================
 # Custom Configuration
 # https://github.com/bevry/base#configuration
+
 env:
   global:
   # Release to NPM
@@ -141,8 +143,6 @@ env:
 
 # https://github.com/balupton/awesome-travis#slack
 # https://github.com/balupton/awesome-travis#email
-# travis encrypt --org "$SLACK_SUBDOMAIN:$SLACK_TRAVIS_TOKEN#updates" --add notifications.slack
-# travis encrypt --org "$TRAVIS_NOTIFICATION_EMAIL" --add notifications.email.recipients
 notifications:
   slack:
     secure: D70Nm9fK4il5RrXIAJ7sQdTk8IDNrPQPGthMmJT2oE4T4DMxaHn31PNp4Z9/tsQG57J9a7NEjsEwTHTOO11PpKD2JqJyDUNTNh+gMj4xGhYcK92d6IRGWtm6yHmhEXHmgMAiOOoxxJA8npCzOPVXu+OSSxns56rr/62mnrhLYeI=

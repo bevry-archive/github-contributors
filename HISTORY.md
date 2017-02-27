@@ -1,5 +1,8 @@
 # History
 
+## v1.4.2 2017 February 27
+- Updated dependencies
+
 ## v1.4.1 2017 February 24
 - Fixed rate limit errors not being caught
 

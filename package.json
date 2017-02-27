@@ -1,7 +1,7 @@
 {
   "title": "Get Contributors",
   "name": "getcontributors",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Fetch all the contributors of all the specified github users repositories",
   "homepage": "https://github.com/bevry/getcontributors",
   "license": "MIT",
@@ -118,12 +118,12 @@
     "editions": "^1.3.3",
     "extendr": "^3.2.2",
     "feedr": "^2.13.3",
-    "getrepos": "^1.0.7",
+    "getrepos": "^1.1.0",
     "taskgroup": "^5.0.1",
     "typechecker": "^4.4.1"
   },
   "devDependencies": {
-    "assert-helpers": "^4.4.0",
+    "assert-helpers": "^4.5.0",
     "babel-cli": "^6.23.0",
     "babel-preset-es2015": "^6.22.0",
     "documentation": "^4.0.0-beta.18",

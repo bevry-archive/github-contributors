@@ -6,13 +6,13 @@ const extendr = require('extendr')
 const {TaskGroup} = require('taskgroup')
 
 /**
-Compare two contributor entities for sorting in an array
-@param {Contributor} a
-@param {Contributor} b
+Compare the name param of two objects for sorting in an array
+@param {Object} a
+@param {Object} b
 @return {number} either 0, -1, or 1
 @access private
 */
-function contributorsComparator (a, b) {
+function nameComparator (a, b) {
 	const A = a.name.toLowerCase()
 	const B = b.name.toLowerCase()
 	if ( A === B ) {
@@ -50,13 +50,13 @@ function cloneContributor (contributor) {
 /**
 Get Contributors Class
 
-A class as it contains a config object, as well as a contributorsMap object.
+A class as it contains a config object, as well as a `contributorsMap` object.
 
 Configuration details can be found in the constructor definition.
 
 Configuration is also forwarded onto https://github.com/bevry/feedr which we use for fetching data.
 
-The contributorsMap object is used to prevent duplicates when fetching contributor data, and to merge data together in case some was missing somewhere but provided elsewhere.
+The `contributorsMap` object is used to prevent duplicates when fetching contributor data, and to merge data together in case some was missing somewhere but provided elsewhere.
 
 Contributors have the following properties:
 
@@ -124,6 +124,9 @@ class Getter {
 		return this
 	}
 
+	// =================================
+	// Add
+
 	/**
 	Add a contributor to the internal listing and finish preparing it
 	@param {Contributor} [contributor]
@@ -162,6 +165,9 @@ class Getter {
 		this.log('debug', 'Added the contributor:', contributor)
 		return this.contributorsMap[contributorData.id]
 	}
+
+	// =================================
+	// Format
 
 	/**
 	Prepare a contributor by setting and determing some defaults
@@ -262,18 +268,22 @@ class Getter {
 
 		// Prepare the contributors that were passed in
 		this.log('debug', `Preparing the ${contributors.length} contributors for the final time`)
-		contributors = contributors.map(this.prepareContributorFinale.bind(this)).sort(contributorsComparator)
+		contributors = contributors.map(this.prepareContributorFinale.bind(this)).sort(nameComparator)
 
 		// Return
 		return contributors
 	}
+
+
+	// =================================
+	// Fetch
 
 	/**
 	Fetch Contributors from Usernames
 	@param {Array} [users] - array of {string} user names, such as `['bevry', 'balupton']`
 	@param {Function} [next] - completion callback, accepts the arguments:
 	@param {Error} [next.error] - if the procedure failed, this is the error instance, otherwise `null`
-	@param {Array} [next.result] - if the procedure succedeed, this is the array of contributors
+	@param {Array} [next.result] - if the procedure succeeded, this is the array of contributors
 	@chainable
 	@returns {this}
 	@access public
@@ -307,7 +317,7 @@ class Getter {
 	@param {Array} [repos] - array of {string} repository names, such as `['bevry/getcontributors', 'bevry/getrepos']`
 	@param {Function} [next] - completion callback, accepts the arguments:
 	@param {Error} [next.error] - if the procedure failed, this is the error instance, otherwise `null`
-	@param {Array} [next.result] - if the procedure succedeed, this is the array of contributors
+	@param {Array} [next.result] - if the procedure succeeded, this is the array of contributors
 	@chainable
 	@returns {this}
 	@access public
@@ -361,7 +371,7 @@ class Getter {
 	@param {string} [repo] - repository name such as `'bevry/getcontributors'`
 	@param {Function} [next] - completion callback, accepts the arguments:
 	@param {Error} [next.error] - if the procedure failed, this is the error instance, otherwise `null`
-	@param {Array} [next.result] - if the procedure succedeed, this is the array of contributors
+	@param {Array} [next.result] - if the procedure succeeded, this is the array of contributors
 	@chainable
 	@returns {this}
 	@access public
@@ -444,7 +454,7 @@ class Getter {
 	@param {string} [repo] - repository name such as `'bevry/getcontributors'`
 	@param {Function} [next] - completion callback, accepts the arguments:
 	@param {Error} [next.error] - if the procedure failed, this is the error instance, otherwise `null`
-	@param {Array} [next.result] - if the procedure succedeed, this is the array of contributors
+	@param {Array} [next.result] - if the procedure succeeded, this is the array of contributors
 	@chainable
 	@returns {this}
 	@access public
