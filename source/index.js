@@ -469,7 +469,12 @@ class Getter {
 		const me = this
 		const feedOptions = {
 			url: `https://api.github.com/repos/${repo}/contributors?per_page=100&client_id=${this.config.githubClientId}&client_secret=${this.config.githubClientSecret}`,
-			parse: 'json'
+			parse: 'json',
+			requestOptions: {
+				headers: {
+					Accept: 'application/vnd.github.v3+json'
+				}
+			}
 		}
 
 		// Fetch the repo's contributors

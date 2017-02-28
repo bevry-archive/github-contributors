@@ -1,5 +1,9 @@
 # History
 
+## v1.4.4 2017 February 28
+- Internal: explicit use of GitHub API version
+- Updated dependencies
+
 ## v1.4.3 2017 February 28
 - Pass configuration over to getrepos instance like how we do with the feedr instance
 
