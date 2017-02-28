@@ -1,5 +1,8 @@
 # History
 
+## v1.4.3 2017 February 28
+- Pass configuration over to getrepos instance like how we do with the feedr instance
+
 ## v1.4.2 2017 February 27
 - Updated dependencies
 

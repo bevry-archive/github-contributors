@@ -1,6 +1,8 @@
 'use strict'
 
 // Import
+const GetRepos = require('getrepos')
+const Feedr = require('feedr')
 const typeChecker = require('typechecker')
 const extendr = require('extendr')
 const {TaskGroup} = require('taskgroup')
@@ -98,13 +100,13 @@ class Getter {
 			githubClientSecret: process.env.GITHUB_CLIENT_SECRET || null
 		}
 		this.contributorsMap = {}
-		this.reposGetter = require('getrepos').create(opts)
 
 		// Extend configuration
 		extendr.extend(this.config, opts)
 
-		// Feedr
-		this.feedr = require('feedr').create(this.config)
+		// Instances
+		this.reposGetter = GetRepos.create(this.config)
+		this.feedr = Feedr.create(this.config)
 
 		// Chain
 		return this
