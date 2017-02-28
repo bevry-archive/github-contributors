@@ -1,5 +1,8 @@
 # History
 
+## v1.4.5 2017 February 28
+- Updated dependencies
+
 ## v1.4.4 2017 February 28
 - Internal: explicit use of GitHub API version
 - Updated dependencies

@@ -4,6 +4,7 @@
 // Import
 const {getType} = require('typechecker')
 const {equal, errorEqual} = require('assert-helpers')
+const util = require('util')
 const joe = require('joe')
 
 // Test
@@ -13,7 +14,11 @@ joe.suite('getcontributors', function (suite, test) {
 	// Create our contributors instance
 	test('create', function () {
 		getter = require('../').create({
-			log: console.log
+			log (...args) {
+				console.log(
+					args.map((arg) => util.inspect(arg, {colors: true})).join(' ').replace(/(client_id|clientid|key|secret)=[a-z0-9]+/gi, '$1=SECRET_REMOVED_BY_FEEDR_CLEAN')
+				)
+			}
 		})
 	})
 
