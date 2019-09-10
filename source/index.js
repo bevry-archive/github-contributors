@@ -6,14 +6,54 @@ const Feedr = require('feedr')
 const typeChecker = require('typechecker')
 const extendr = require('extendr')
 const { TaskGroup } = require('taskgroup')
+const githubAuthQueryString = require('githubauthquerystring').fetch()
 
 /**
-Compare the name param of two objects for sorting in an array
-@param {Object} a
-@param {Object} b
-@return {number} either 0, -1, or 1
-@access private
-*/
+ * @typedef {Object} Config
+ * @property {LogCallback} [log]
+ */
+
+/**
+ * @typedef {Object} Contributor
+ * @property {string} [id]
+ * @property {string} [name]
+ * @property {string} [email]
+ * @property {string} [url]
+ * @property {string} [username]
+ * @property {string} [text] a string formatted like `NAME <EMAIL> (URL)` for use in package.json fields
+ * @property {string} [markdown] a string formatted like `[NAME](url) <email>` for using in markdown files
+ * @property {Object<string, string>} [repos]
+ */
+
+/**
+ * @callback LogCallback
+ * @param {*} [logLevel]
+ * @param {...*} [args]
+ */
+
+/**
+ * @callback ContributorsCallback
+ * @param {Error?} error
+ * @param {Contributors} [result]
+ */
+
+/**
+ * @typedef {Array<Contributor>} Contributors
+ * @private
+ */
+
+/**
+ * @typedef {Object<string, Contributor>} ContributorsMap
+ * @private
+ */
+
+/**
+ * Compare the name param of two objects for sorting in an array
+ * @param {Object} a
+ * @param {Object} b
+ * @return {number} either 0, -1, or 1
+ * @private
+ */
 function nameComparator(a, b) {
 	const A = a.name.toLowerCase()
 	const B = b.name.toLowerCase()
@@ -27,11 +67,11 @@ function nameComparator(a, b) {
 }
 
 /**
-Clone a contributor to prevent reference issues
-@param {Contributor} contributor
-@return {Contributor}
-@access private
-*/
+ * Clone a contributor to prevent reference issues
+ * @param {Contributor} contributor
+ * @return {Contributor}
+ * @private
+ */
 function cloneContributor(contributor) {
 	// Clone
 	const contributorData = extendr.deepDefaults(
@@ -51,59 +91,42 @@ function cloneContributor(contributor) {
 }
 
 /**
-Get Contributors Class
-
-A class as it contains a config object, as well as a `contributorsMap` object.
-
-Configuration details can be found in the constructor definition.
-
-Configuration is also forwarded onto https://github.com/bevry/feedr which we use for fetching data.
-
-The `contributorsMap` object is used to prevent duplicates when fetching contributor data, and to merge data together in case some was missing somewhere but provided elsewhere.
-
-Contributors have the following properties:
-
-- name
-- email
-- url
-- username
-- text (a string formatted like `NAME <EMAIL> (URL)` for use in package.json fields)
-- repos
-
-@constructor
-@class Getter
-@access public
-*/
+ * Get Contributors Class
+ * A class as it contains a config object, as well as a `contributorsMap` object.
+ * Configuration details can be found in the constructor definition.
+ * Configuration is also forwarded onto https://github.com/bevry/feedr which we use for fetching data.
+ * The `contributorsMap` object is used to prevent duplicates when fetching contributor data, and to merge data together in case some was missing somewhere but provided elsewhere.
+ * @constructor
+ * @class Getter
+ * @public
+ */
 class Getter {
 	/**
 	Creates and returns new instance of the current class.
-	@param {...*} args - The arguments to be forwarded along to the constructor.
-	@return {Object} The new instance.
-	@static
-	@access public
-	*/
+	 * @param {...*} args - The arguments to be forwarded along to the constructor.
+	 * @return {Object} The new instance.
+	 * @static
+	 * @public
+	 */
 	static create(...args) {
 		return new this(...args)
 	}
 
 	/**
-	Forward the arguments onto the configured logger if it exists.
-	@param {Object} [opts]
-	@param {Function} [opts.log] - defaults to `null`, can be a function that receives the arguments: `logLevel`, `...args`
-	@param {string} [opts.githubClientId] - defaults to the environment variable `GITHUB_CLIENT_ID` or `null`
-	@param {string} [opts.githubClientSecret] - defaults to environment variable `GITHUB_CLIENT_SECRET` or `null`
-	@access public
-	*/
+	 * Forward the arguments onto the configured logger if it exists.
+	 * @param {Config} [opts]
+	 * @public
+	 */
 	constructor(opts = {}) {
-		// Prepare
-		this.config = {
-			githubClientId: process.env.GITHUB_CLIENT_ID || null,
-			githubClientSecret: process.env.GITHUB_CLIENT_SECRET || null
-		}
-		this.contributorsMap = {}
+		/**
+		 * @type {Config}
+		 */
+		this.config = opts
 
-		// Extend configuration
-		extendr.extend(this.config, opts)
+		/**
+		 * @type {ContributorsMap}
+		 */
+		this.contributorsMap = {}
 
 		// Instances
 		this.reposGetter = GetRepos.create(this.config)
@@ -114,12 +137,12 @@ class Getter {
 	}
 
 	/**
-	Forward the arguments onto the configured logger if it exists.
-	@param {...*} args
-	@chainable
-	@returns {this}
-	@access private
-	*/
+	 * Forward the arguments onto the configured logger if it exists.
+	 * @param {...*} args
+	 * @chainable
+	 * @returns {this}
+	 * @private
+	 */
 	log(...args) {
 		if (this.config.log) {
 			this.config.log(...args)
@@ -131,11 +154,11 @@ class Getter {
 	// Add
 
 	/**
-	Add a contributor to the internal listing and finish preparing it
-	@param {Contributor} [contributor]
-	@returns {Contributor}
-	@access private
-	*/
+	 * Add a contributor to the internal listing and finish preparing it
+	 * @param {Contributor} [contributor]
+	 * @returns {Contributor}
+	 * @private
+	 */
 	addContributor(contributor) {
 		// Log
 		this.log('debug', 'Adding the contributor:', contributor)
@@ -175,11 +198,11 @@ class Getter {
 	// Format
 
 	/**
-	Prepare a contributor by setting and determing some defaults
-	@param {Contributor} [contributor]
-	@returns {Contributor}
-	@access private
-	*/
+	 * Prepare a contributor by setting and determing some defaults
+	 * @param {Contributor} [contributor]
+	 * @returns {Contributor}
+	 * @private
+	 */
 	prepareContributor(contributor) {
 		// Log
 		this.log('debug', 'Preparing the contributor:', contributor)
@@ -202,11 +225,11 @@ class Getter {
 	}
 
 	/**
-	Prepare a contributor for return to the user, assume we have no more data, so determine the rest
-	@param {Contributor} [contributor]
-	@returns {Contributor}
-	@access private
-	*/
+	 * Prepare a contributor for return to the user, assume we have no more data, so determine the rest
+	 * @param {Contributor} [contributor]
+	 * @returns {Contributor}
+	 * @private
+	 */
 	prepareContributorFinale(contributor) {
 		// Log
 		this.log(
@@ -224,13 +247,13 @@ class Getter {
 			contributorData.url || `https://github.com/${contributorData.username}`
 
 		// Create text property
-		contributorData.text = []
-		contributorData.text.push(contributorData.name)
+		const text = []
+		text.push(contributorData.name)
 		if (contributorData.email) {
-			contributorData.text.push(`<${contributorData.email}>`)
+			text.push(`<${contributorData.email}>`)
 		}
-		contributorData.text.push(`(${contributorData.url})`)
-		contributorData.text = contributorData.text.join(' ') || null
+		text.push(`(${contributorData.url})`)
+		contributorData.text = text.join(' ') || null
 
 		// Create markdown property
 		contributorData.markdown = `[${contributorData.name}](${contributorData.url})`
@@ -243,11 +266,11 @@ class Getter {
 	}
 
 	/**
-	Prepare a contributor for return to the user, assume we have no more data, so determine the rest
-	@param {Array} [contributors] - array of {Contributor}
-	@returns {Array} - array of {Contributor}
-	@access private
-	*/
+	 * Prepare a contributor for return to the user, assume we have no more data, so determine the rest
+	 * @param {Contributors|ContributorsMap} [contributors]
+	 * @returns {Contributors}
+	 * @private
+	 */
 	getContributors(contributors) {
 		// Log
 		this.log('debug', 'Get contributors')
@@ -291,15 +314,13 @@ class Getter {
 	// Fetch
 
 	/**
-	Fetch Contributors from Usernames
-	@param {Array} [users] - array of {string} user names, such as `['bevry', 'balupton']`
-	@param {Function} [next] - completion callback, accepts the arguments:
-	@param {Error} [next.error] - if the procedure failed, this is the error instance, otherwise `null`
-	@param {Array} [next.result] - if the procedure succeeded, this is the array of contributors
-	@chainable
-	@returns {this}
-	@access public
-	*/
+	 * Fetch Contributors from Usernames
+	 * @param {Array<string>} [users] username, e.g. `['bevry', 'balupton']`
+	 * @param {ContributorsCallback} [next]
+	 * @chainable
+	 * @returns {this}
+	 * @public
+	 */
 	fetchContributorsFromUsers(users, next) {
 		// Log
 		this.log('debug', 'Get contributors from users:', users)
@@ -325,15 +346,13 @@ class Getter {
 	}
 
 	/**
-	Fetch Contributors from Repository Names
-	@param {Array} [repos] - array of {string} repository names, such as `['bevry/getcontributors', 'bevry/getrepos']`
-	@param {Function} [next] - completion callback, accepts the arguments:
-	@param {Error} [next.error] - if the procedure failed, this is the error instance, otherwise `null`
-	@param {Array} [next.result] - if the procedure succeeded, this is the array of contributors
-	@chainable
-	@returns {this}
-	@access public
-	*/
+	 * Fetch Contributors from Repository Names
+	 * @param {Array<string>} [repos] repository names, e.g. `['bevry/getcontributors', 'bevry/getrepos']`
+	 * @param {ContributorsCallback} [next]
+	 * @chainable
+	 * @returns {this}
+	 * @public
+	 */
 	fetchContributorsFromRepos(repos, next) {
 		// Log
 		this.log('debug', 'Get contributors from repos:', repos)
@@ -383,15 +402,13 @@ class Getter {
 	}
 
 	/**
-	Fetch Contributors from a Repository's package.json file if it has one
-	@param {string} [repo] - repository name such as `'bevry/getcontributors'`
-	@param {Function} [next] - completion callback, accepts the arguments:
-	@param {Error} [next.error] - if the procedure failed, this is the error instance, otherwise `null`
-	@param {Array} [next.result] - if the procedure succeeded, this is the array of contributors
-	@chainable
-	@returns {this}
-	@access public
-	*/
+	 * Fetch Contributors from a Repository's package.json file if it has one
+	 * @param {string} [repo] repository name, e.g. `'bevry/getcontributors'`
+	 * @param {ContributorsCallback} [next]
+	 * @chainable
+	 * @returns {this}
+	 * @public
+	 */
 	fetchContributorsFromPackage(repo, next) {
 		// Log
 		this.log('debug', 'Get contributors from package:', repo)
@@ -466,15 +483,13 @@ class Getter {
 	}
 
 	/**
-	Fetch Contributors from a Repository's GitHub Contributor API
-	@param {string} [repo] - repository name such as `'bevry/getcontributors'`
-	@param {Function} [next] - completion callback, accepts the arguments:
-	@param {Error} [next.error] - if the procedure failed, this is the error instance, otherwise `null`
-	@param {Array} [next.result] - if the procedure succeeded, this is the array of contributors
-	@chainable
-	@returns {this}
-	@access public
-	*/
+	 * Fetch Contributors from a Repository's GitHub Contributor API
+	 * @param {string} [repo] repository name, e.g. `'bevry/getcontributors'`
+	 * @param {ContributorsCallback} [next]
+	 * @chainable
+	 * @returns {this}
+	 * @public
+	 */
 	fetchContributorsFromRepo(repo, next) {
 		// Log
 		this.log('debug', 'Get contributors from repo:', repo)
@@ -482,7 +497,7 @@ class Getter {
 		// Prepare
 		const me = this
 		const feedOptions = {
-			url: `https://api.github.com/repos/${repo}/contributors?per_page=100&client_id=${this.config.githubClientId}&client_secret=${this.config.githubClientSecret}`,
+			url: `https://api.github.com/repos/${repo}/contributors?per_page=100&${githubAuthQueryString}`,
 			parse: 'json',
 			requestOptions: {
 				headers: {

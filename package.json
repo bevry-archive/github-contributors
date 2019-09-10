@@ -1,7 +1,7 @@
 {
   "title": "Get Contributors",
   "name": "getcontributors",
-  "version": "1.4.5",
+  "version": "1.5.0",
   "description": "Fetch all the contributors of all the specified github users repositories",
   "homepage": "https://github.com/bevry/getcontributors",
   "license": "MIT",
@@ -83,6 +83,7 @@
     "extendr": "^3.4.1",
     "feedr": "^3.0.0",
     "getrepos": "^1.3.0",
+    "githubauthquerystring": "^1.0.2",
     "taskgroup": "^5.3.0",
     "typechecker": "^4.7.0"
   },
