@@ -4,7 +4,6 @@
 
 <!-- /TITLE -->
 
-
 <!-- BADGES/ -->
 
 <span class="badge-travisci"><a href="http://travis-ci.org/bevry/getcontributors" title="Check this project's build status on TravisCI"><img src="https://img.shields.io/travis/bevry/getcontributors/master.svg" alt="Travis CI Build Status" /></a></span>
@@ -26,19 +25,18 @@
 
 <!-- /BADGES -->
 
-
 <!-- DESCRIPTION/ -->
 
 Fetch all the contributors of all the specified github users repositories
 
 <!-- /DESCRIPTION -->
 
-
 <!-- INSTALL/ -->
 
 <h2>Install</h2>
 
 <a href="https://npmjs.com" title="npm is a package manager for javascript"><h3>npm</h3></a>
+
 <ul>
 <li>Install: <code>npm install --save getcontributors</code></li>
 <li>Require: <code>require('getcontributors')</code></li>
@@ -57,46 +55,46 @@ Fetch all the contributors of all the specified github users repositories
 
 This project provides its type information via inline <a href="http://usejsdoc.org" title="JSDoc is an API documentation generator for JavaScript, similar to Javadoc or phpDocumentor">JSDoc Comments</a>. To make use of this in <a href="https://www.typescriptlang.org/" title="TypeScript is a typed superset of JavaScript that compiles to plain JavaScript. ">TypeScript</a>, set your <code>maxNodeModuleJsDepth</code> compiler option to `5` or thereabouts. You can accomlish this via your `tsconfig.json` file like so:
 
-``` json
+```json
 {
-  "compilerOptions": {
-    "maxNodeModuleJsDepth": 5
-  }
+    "compilerOptions": {
+        "maxNodeModuleJsDepth": 5
+    }
 }
 ```
 
 <!-- /INSTALL -->
 
-
 ## Usage
 
 [API Documentation.](http://master.getcontributors.bevry.surge.sh/docs/)
 
-``` javascript
+```javascript
 // Create our getcontributors instance
 var getter = require('getcontributors').create({
-	githubClientId: null,      // optional, will try process.env.GITHUB_CLIENT_ID
-	githubClientSecret: null,  // optional, will try process.env.GITHUB_CLIENT_SECRET
-	log: console.log           // optional, arguments: level, message...
+    log: console.log // optional, arguments: level, message...
 })
 
 // Fetch all the contributors on these github repositories
-getter.fetchContributorsFromRepos(['bevry/getcontributors'], function(err, contributors){
-	console.log(err, contributors)
+getter.fetchContributorsFromRepos(['bevry/getcontributors'], function(
+    err,
+    contributors
+) {
+    console.log(err, contributors)
 
-	// Fetch all the contributors on these github users/organisations
-	getter.fetchContributorsFromUsers(['bevry'], function(err, contributors){
-		console.log(err, contributors)
+    // Fetch all the contributors on these github users/organisations
+    getter.fetchContributorsFromUsers(['bevry'], function(err, contributors) {
+        console.log(err, contributors)
 
-		// Get the combined listing
-		console.log(getter.getContributors())
-	})
+        // Get the combined listing
+        console.log(getter.getContributors())
+    })
 })
 ```
 
 Contributors are returned as an array of contributor objects, here is an example contributor object:
 
-``` javascript
+```javascript
 {
 	name: "Benjamin Lupton",
 	email: "b@lupton.cc",
@@ -119,7 +117,6 @@ Contributors are returned as an array of contributor objects, here is an example
 
 <!-- /HISTORY -->
 
-
 <!-- CONTRIBUTE/ -->
 
 <h2>Contribute</h2>
@@ -127,7 +124,6 @@ Contributors are returned as an array of contributor objects, here is an example
 <a href="https://github.com/bevry/getcontributors/blob/master/CONTRIBUTING.md#files">Discover how you can contribute by heading on over to the <code>CONTRIBUTING.md</code> file.</a>
 
 <!-- /CONTRIBUTE -->
-
 
 <!-- BACKERS/ -->
 
@@ -163,7 +159,6 @@ These amazing people have contributed code to this project:
 <a href="https://github.com/bevry/getcontributors/blob/master/CONTRIBUTING.md#files">Discover how you can contribute by heading on over to the <code>CONTRIBUTING.md</code> file.</a>
 
 <!-- /BACKERS -->
-
 
 <!-- LICENSE/ -->
 
