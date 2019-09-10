@@ -5,7 +5,7 @@ const GetRepos = require('getrepos')
 const Feedr = require('feedr')
 const typeChecker = require('typechecker')
 const extendr = require('extendr')
-const {TaskGroup} = require('taskgroup')
+const { TaskGroup } = require('taskgroup')
 
 /**
 Compare the name param of two objects for sorting in an array
@@ -14,16 +14,14 @@ Compare the name param of two objects for sorting in an array
 @return {number} either 0, -1, or 1
 @access private
 */
-function nameComparator (a, b) {
+function nameComparator(a, b) {
 	const A = a.name.toLowerCase()
 	const B = b.name.toLowerCase()
-	if ( A === B ) {
+	if (A === B) {
 		return 0
-	}
-	else if ( A < B ) {
+	} else if (A < B) {
 		return -1
-	}
-	else {
+	} else {
 		return 1
 	}
 }
@@ -34,16 +32,19 @@ Clone a contributor to prevent reference issues
 @return {Contributor}
 @access private
 */
-function cloneContributor (contributor) {
+function cloneContributor(contributor) {
 	// Clone
-	const contributorData = extendr.deepDefaults({
-		name: null,
-		email: null,
-		url: null,
-		username: null,
-		text: null,
-		repos: null
-	}, contributor)
+	const contributorData = extendr.deepDefaults(
+		{
+			name: null,
+			email: null,
+			url: null,
+			username: null,
+			text: null,
+			repos: null
+		},
+		contributor
+	)
 
 	// Return
 	return contributorData
@@ -81,7 +82,7 @@ class Getter {
 	@static
 	@access public
 	*/
-	static create (...args) {
+	static create(...args) {
 		return new this(...args)
 	}
 
@@ -93,7 +94,7 @@ class Getter {
 	@param {string} [opts.githubClientSecret] - defaults to environment variable `GITHUB_CLIENT_SECRET` or `null`
 	@access public
 	*/
-	constructor (opts = {}) {
+	constructor(opts = {}) {
 		// Prepare
 		this.config = {
 			githubClientId: process.env.GITHUB_CLIENT_ID || null,
@@ -119,8 +120,8 @@ class Getter {
 	@returns {this}
 	@access private
 	*/
-	log (...args) {
-		if ( this.config.log ) {
+	log(...args) {
+		if (this.config.log) {
 			this.config.log(...args)
 		}
 		return this
@@ -135,7 +136,7 @@ class Getter {
 	@returns {Contributor}
 	@access private
 	*/
-	addContributor (contributor) {
+	addContributor(contributor) {
 		// Log
 		this.log('debug', 'Adding the contributor:', contributor)
 
@@ -143,25 +144,27 @@ class Getter {
 		const contributorData = this.prepareContributor(contributor)
 
 		// We need a username
-		if ( !contributorData.username ) {
-			this.log('debug', 'Contributor had no username, skipping add:', contributor)
+		if (!contributorData.username) {
+			this.log(
+				'debug',
+				'Contributor had no username, skipping add:',
+				contributor
+			)
 			return null
 		}
 
 		// Find existing contributor
 		contributorData.id = contributorData.username.toLowerCase()
-		const existingContributorData = this.contributorsMap[contributorData.id] = (
-			this.contributorsMap[contributorData.id] || {}
-		)
+		const existingContributorData = (this.contributorsMap[contributorData.id] =
+			this.contributorsMap[contributorData.id] || {})
 
 		// Merge contributorData into the existingContributorData
 		extendr.deepDefaults(existingContributorData, contributorData)
 
 		// Update references in database
 		this.contributorsMap[contributorData.id] = existingContributorData
-		this.contributorsMap[contributorData.id].repos = (
+		this.contributorsMap[contributorData.id].repos =
 			this.contributorsMap[contributorData.id].repos || {}
-		)
 
 		// Return
 		this.log('debug', 'Added the contributor:', contributor)
@@ -177,7 +180,7 @@ class Getter {
 	@returns {Contributor}
 	@access private
 	*/
-	prepareContributor (contributor) {
+	prepareContributor(contributor) {
 		// Log
 		this.log('debug', 'Preparing the contributor:', contributor)
 
@@ -185,9 +188,11 @@ class Getter {
 		const contributorData = cloneContributor(contributor)
 
 		// Extract username
-		if ( contributorData.url && contributorData.username == null ) {
-			const usernameMatch = (/^.+?github.com\/([^/]+).*$/).exec(contributorData.url)
-			if ( usernameMatch ) {
+		if (contributorData.url && contributorData.username == null) {
+			const usernameMatch = /^.+?github.com\/([^/]+).*$/.exec(
+				contributorData.url
+			)
+			if (usernameMatch) {
 				contributorData.username = (usernameMatch[1] || '').trim() || null
 			}
 		}
@@ -202,25 +207,26 @@ class Getter {
 	@returns {Contributor}
 	@access private
 	*/
-	prepareContributorFinale (contributor) {
+	prepareContributorFinale(contributor) {
 		// Log
-		this.log('debug', 'Preparing the contributor for the final time:', contributor)
+		this.log(
+			'debug',
+			'Preparing the contributor for the final time:',
+			contributor
+		)
 
 		// Prepare
 		const contributorData = cloneContributor(contributor)
 
 		// Fallbacks
-		contributorData.name = (
-			contributorData.name || contributorData.username
-		)
-		contributorData.url = (
+		contributorData.name = contributorData.name || contributorData.username
+		contributorData.url =
 			contributorData.url || `https://github.com/${contributorData.username}`
-		)
 
 		// Create text property
 		contributorData.text = []
 		contributorData.text.push(contributorData.name)
-		if ( contributorData.email ) {
+		if (contributorData.email) {
 			contributorData.text.push(`<${contributorData.email}>`)
 		}
 		contributorData.text.push(`(${contributorData.url})`)
@@ -228,7 +234,7 @@ class Getter {
 
 		// Create markdown property
 		contributorData.markdown = `[${contributorData.name}](${contributorData.url})`
-		if ( contributorData.email ) {
+		if (contributorData.email) {
 			contributorData.markdown += ` <${contributorData.email}>`
 		}
 
@@ -242,20 +248,20 @@ class Getter {
 	@returns {Array} - array of {Contributor}
 	@access private
 	*/
-	getContributors (contributors) {
+	getContributors(contributors) {
 		// Log
 		this.log('debug', 'Get contributors')
 
 		// Allow the user to pass in their own contributors array or object
-		if ( contributors == null ) {
+		if (contributors == null) {
 			contributors = this.contributorsMap
 		}
 
 		// Remove duplicates from array
-		else if ( typeChecker.isArray(contributors) ) {
+		else if (typeChecker.isArray(contributors)) {
 			const exists = {}
-			contributors = contributors.filter(function (contributor) {
-				if ( exists[contributor.username] == null ) {
+			contributors = contributors.filter(function(contributor) {
+				if (exists[contributor.username] == null) {
 					exists[contributor.username] = 0
 				}
 				++exists[contributor.username]
@@ -264,18 +270,22 @@ class Getter {
 		}
 
 		// Convert objects to arrays
-		if ( typeChecker.isPlainObject(contributors) ) {
-			contributors = Object.keys(contributors).map((key) => contributors[key])
+		if (typeChecker.isPlainObject(contributors)) {
+			contributors = Object.keys(contributors).map(key => contributors[key])
 		}
 
 		// Prepare the contributors that were passed in
-		this.log('debug', `Preparing the ${contributors.length} contributors for the final time`)
-		contributors = contributors.map(this.prepareContributorFinale.bind(this)).sort(nameComparator)
+		this.log(
+			'debug',
+			`Preparing the ${contributors.length} contributors for the final time`
+		)
+		contributors = contributors
+			.map(this.prepareContributorFinale.bind(this))
+			.sort(nameComparator)
 
 		// Return
 		return contributors
 	}
-
 
 	// =================================
 	// Fetch
@@ -290,21 +300,21 @@ class Getter {
 	@returns {this}
 	@access public
 	*/
-	fetchContributorsFromUsers (users, next) {
+	fetchContributorsFromUsers(users, next) {
 		// Log
 		this.log('debug', 'Get contributors from users:', users)
 
 		// Fetch
 		this.reposGetter.fetchReposFromUsers(users, (err, repos) => {
 			// Check
-			if ( err ) {
+			if (err) {
 				return next(err, [])
 			}
 
 			// Filter out forks, return just their names
 			const repoNames = repos
-				.filter((repo) => repo.fork !== true)
-				.map((repo) => repo.full_name)
+				.filter(repo => repo.fork !== true)
+				.map(repo => repo.full_name)
 
 			// Fetch the contributors for the repos
 			return this.fetchContributorsFromRepos(repoNames, next)
@@ -324,25 +334,27 @@ class Getter {
 	@returns {this}
 	@access public
 	*/
-	fetchContributorsFromRepos (repos, next) {
+	fetchContributorsFromRepos(repos, next) {
 		// Log
 		this.log('debug', 'Get contributors from repos:', repos)
 
 		// Prepare
 		const me = this
 		const result = []
-		const tasks = TaskGroup.create({concurrency: 0}).done(function (err) {
-			if ( err ) {
+		const tasks = TaskGroup.create({ concurrency: 0 }).done(function(err) {
+			if (err) {
 				return next(err, [])
 			}
 			return next(null, me.getContributors(result))
 		})
 
 		// Add the contributors for each repo
-		repos.forEach(function (repo) {
-			tasks.addTask(`fetch github contributors for ${repo}`, function (complete) {
-				me.fetchContributorsFromRepo(repo, function (err, contributors = []) {
-					if ( err ) {
+		repos.forEach(function(repo) {
+			tasks.addTask(`fetch github contributors for ${repo}`, function(
+				complete
+			) {
+				me.fetchContributorsFromRepo(repo, function(err, contributors = []) {
+					if (err) {
 						return complete(err)
 					}
 					result.push(...contributors)
@@ -350,9 +362,11 @@ class Getter {
 				})
 			})
 
-			tasks.addTask(`fetch package contributors for ${repo}`, function (complete) {
-				me.fetchContributorsFromPackage(repo, function (err, contributors = []) {
-					if ( err ) {
+			tasks.addTask(`fetch package contributors for ${repo}`, function(
+				complete
+			) {
+				me.fetchContributorsFromPackage(repo, function(err, contributors = []) {
+					if (err) {
 						return complete(err)
 					}
 					result.push(...contributors)
@@ -378,7 +392,7 @@ class Getter {
 	@returns {this}
 	@access public
 	*/
-	fetchContributorsFromPackage (repo, next) {
+	fetchContributorsFromPackage(repo, next) {
 		// Log
 		this.log('debug', 'Get contributors from package:', repo)
 
@@ -390,9 +404,9 @@ class Getter {
 		}
 
 		// Read the repo's package file
-		this.feedr.readFeed(feedOptions, function (err, packageData) {
+		this.feedr.readFeed(feedOptions, function(err, packageData) {
 			// Ignore if error'd or no result
-			if ( err || !packageData ) {
+			if (err || !packageData) {
 				return next(err, [])
 			}
 
@@ -400,15 +414,19 @@ class Getter {
 			const addedContributors = []
 
 			// Add each of the contributors
-			const everyone = (packageData.contributors || []).concat(packageData.maintainers || [])
-			everyone.forEach(function (contributor) {
+			const everyone = (packageData.contributors || []).concat(
+				packageData.maintainers || []
+			)
+			everyone.forEach(function(contributor) {
 				// Prepare
 				let contributorData = {}
 
 				// Extract
-				if ( typeChecker.isString(contributor) ) {
-					const contributorMatch = (/^([^<(]+)\s*(?:<(.+?)>)?\s*(?:\((.+?)\))?$/).exec(contributor)
-					if ( !contributorMatch ) {
+				if (typeChecker.isString(contributor)) {
+					const contributorMatch = /^([^<(]+)\s*(?:<(.+?)>)?\s*(?:\((.+?)\))?$/.exec(
+						contributor
+					)
+					if (!contributorMatch) {
 						return
 					}
 					contributorData = {
@@ -417,9 +435,7 @@ class Getter {
 						url: (contributorMatch[3] || '').trim() || null,
 						repos: {}
 					}
-				}
-
-				else if ( typeChecker.isPlainObject(contributor) ) {
+				} else if (typeChecker.isPlainObject(contributor)) {
 					contributorData = {
 						name: contributor.name || null,
 						email: contributor.email || null,
@@ -427,9 +443,7 @@ class Getter {
 						username: contributor.username || null,
 						repos: {}
 					}
-				}
-
-				else {
+				} else {
 					return
 				}
 
@@ -438,7 +452,7 @@ class Getter {
 
 				// Add contributor
 				const addedContributor = me.addContributor(contributorData)
-				if ( addedContributor ) {
+				if (addedContributor) {
 					addedContributors.push(addedContributor)
 				}
 			})
@@ -461,7 +475,7 @@ class Getter {
 	@returns {this}
 	@access public
 	*/
-	fetchContributorsFromRepo (repo, next) {
+	fetchContributorsFromRepo(repo, next) {
 		// Log
 		this.log('debug', 'Get contributors from repo:', repo)
 
@@ -478,18 +492,15 @@ class Getter {
 		}
 
 		// Fetch the repo's contributors
-		this.feedr.readFeed(feedOptions, function (err, responseData) {
+		this.feedr.readFeed(feedOptions, function(err, responseData) {
 			// Check
-			if ( err ) {
+			if (err) {
 				return next(err, [])
-			}
-			else if ( responseData.message ) {
+			} else if (responseData.message) {
 				return next(new Error(responseData.message), [])
-			}
-			else if ( !Array.isArray(responseData) ) {
+			} else if (!Array.isArray(responseData)) {
 				return next(new Error('response was not an array of contributors'), [])
-			}
-			else if ( responseData.length === 0 ) {
+			} else if (responseData.length === 0) {
 				return next(null, [])
 			}
 
@@ -497,7 +508,7 @@ class Getter {
 			const addedContributors = []
 
 			// Extract the correct data from the contributors
-			responseData.forEach(function (contributor) {
+			responseData.forEach(function(contributor) {
 				// Prepare
 				const contributorData = {
 					url: contributor.html_url,
@@ -510,7 +521,7 @@ class Getter {
 
 				// Add contributor
 				const addedContributor = me.addContributor(contributorData)
-				if ( addedContributor ) {
+				if (addedContributor) {
 					addedContributors.push(addedContributor)
 				}
 			})
