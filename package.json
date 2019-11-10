@@ -87,7 +87,7 @@
     "feedr": "^4.2.0",
     "getrepos": "^1.4.0",
     "githubauthquerystring": "^1.1.0",
-    "taskgroup": "^5.3.0",
+    "taskgroup": "^6.0.0",
     "typechecker": "^4.8.0"
   },
   "devDependencies": {
