@@ -1,7 +1,7 @@
 {
   "title": "Get Contributors",
   "name": "getcontributors",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Fetch all the contributors of all the specified github users repositories",
   "homepage": "https://github.com/bevry/getcontributors",
   "license": "MIT",
@@ -87,20 +87,20 @@
     "feedr": "^4.2.0",
     "getrepos": "^1.4.0",
     "githubauthquerystring": "^1.1.0",
-    "taskgroup": "^5.3.0",
+    "taskgroup": "^6.0.0",
     "typechecker": "^4.8.0"
   },
   "devDependencies": {
-    "assert-helpers": "^4.9.7",
+    "assert-helpers": "^5.2.1",
     "eslint": "^6.6.0",
     "eslint-config-bevry": "^1.2.1",
     "eslint-config-prettier": "^6.5.0",
     "eslint-plugin-prettier": "^3.1.1",
     "jsdoc": "^3.6.3",
-    "kava": "^3.1.0",
+    "kava": "^3.2.0",
     "minami": "^1.2.3",
     "prettier": "^1.19.1",
-    "projectz": "^1.7.5",
+    "projectz": "^1.9.0",
     "surge": "^0.21.3",
     "valid-directory": "^1.0.0"
   },
