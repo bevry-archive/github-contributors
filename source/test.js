@@ -6,6 +6,7 @@ const { getType } = require('typechecker')
 const { equal, errorEqual } = require('assert-helpers')
 const util = require('util')
 const kava = require('kava')
+const getContributors = require('./')
 
 // Test
 kava.suite('getcontributors', function(suite, test) {
@@ -13,7 +14,7 @@ kava.suite('getcontributors', function(suite, test) {
 
 	// Create our contributors instance
 	test('create', function() {
-		getter = require('../').create({
+		getter = getContributors.create({
 			log(...args) {
 				console.log(
 					args
