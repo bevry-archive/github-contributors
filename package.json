@@ -1,7 +1,7 @@
 {
   "title": "Get Contributors",
   "name": "getcontributors",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "Fetch all the contributors of all the specified github users repositories",
   "homepage": "https://github.com/bevry/getcontributors",
   "license": "MIT",
@@ -44,10 +44,7 @@
       "travisTLD": "com"
     }
   },
-  "funding": {
-    "type": "cooperative",
-    "url": "https://bevry.me/fund"
-  },
+  "funding": "https://bevry.me/fund",
   "author": "2013+ Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
   "maintainers": [
     "Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
@@ -76,7 +73,7 @@
         "require"
       ],
       "engines": {
-        "node": "8 || 10 || 12 || 13",
+        "node": "8 || 10 || 12",
         "browsers": false
       }
     }
@@ -84,25 +81,25 @@
   "main": "source/index.js",
   "dependencies": {
     "extendr": "^3.5.0",
-    "feedr": "^4.2.0",
-    "getrepos": "^1.4.0",
-    "githubauthquerystring": "^1.1.0",
-    "taskgroup": "^6.0.0",
-    "typechecker": "^4.8.0"
+    "feedr": "^4.4.0",
+    "getrepos": "^1.5.0",
+    "githubauthquerystring": "^1.2.0",
+    "taskgroup": "^6.1.0",
+    "typechecker": "^4.9.0"
   },
   "devDependencies": {
-    "assert-helpers": "^5.2.1",
+    "assert-helpers": "^5.3.0",
     "eslint": "^6.6.0",
     "eslint-config-bevry": "^1.2.1",
-    "eslint-config-prettier": "^6.5.0",
+    "eslint-config-prettier": "^6.6.0",
     "eslint-plugin-prettier": "^3.1.1",
     "jsdoc": "^3.6.3",
-    "kava": "^3.2.0",
+    "kava": "^4.0.0",
     "minami": "^1.2.3",
     "prettier": "^1.19.1",
-    "projectz": "^1.9.0",
+    "projectz": "^1.10.0",
     "surge": "^0.21.3",
-    "valid-directory": "^1.0.0"
+    "valid-directory": "^1.1.1"
   },
   "scripts": {
     "our:clean": "rm -Rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
