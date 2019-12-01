@@ -83,7 +83,7 @@
     "extendr": "^3.5.0",
     "feedr": "^4.4.0",
     "getrepos": "^1.5.0",
-    "githubauthquerystring": "^1.2.0",
+    "githubauthquerystring": "^2.2.0",
     "taskgroup": "^6.1.0",
     "typechecker": "^4.9.0"
   },
