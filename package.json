@@ -80,7 +80,7 @@
   ],
   "main": "source/index.js",
   "dependencies": {
-    "extendr": "^3.5.0",
+    "extendr": "^4.2.0",
     "feedr": "^4.4.0",
     "getrepos": "^1.5.0",
     "githubauthquerystring": "^1.2.0",
