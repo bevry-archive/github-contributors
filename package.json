@@ -85,7 +85,7 @@
     "getrepos": "^1.5.0",
     "githubauthquerystring": "^1.2.0",
     "taskgroup": "^6.1.0",
-    "typechecker": "^4.9.0"
+    "typechecker": "^5.1.0"
   },
   "devDependencies": {
     "assert-helpers": "^5.3.0",
