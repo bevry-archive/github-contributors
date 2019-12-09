@@ -7,6 +7,7 @@ const typeChecker = require('typechecker')
 const extendr = require('extendr')
 const { TaskGroup } = require('taskgroup')
 const githubAuthQueryString = require('githubauthquerystring').fetch()
+const ghapi = process.env.GITHUB_API || 'https://api.github.com'
 
 /**
  * @typedef {Object} Config
@@ -497,7 +498,7 @@ class Getter {
 		// Prepare
 		const me = this
 		const feedOptions = {
-			url: `https://api.github.com/repos/${repo}/contributors?per_page=100&${githubAuthQueryString}`,
+			url: `${ghapi}/repos/${repo}/contributors?per_page=100&${githubAuthQueryString}`,
 			parse: 'json',
 			requestOptions: {
 				headers: {

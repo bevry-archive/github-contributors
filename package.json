@@ -1,7 +1,7 @@
 {
   "title": "Get Contributors",
   "name": "getcontributors",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "Fetch all the contributors of all the specified github users repositories",
   "homepage": "https://github.com/bevry/getcontributors",
   "license": "MIT",
@@ -23,6 +23,7 @@
       "daviddm",
       "daviddmdev",
       "---",
+      "githubsponsors",
       "patreon",
       "flattr",
       "liberapay",
@@ -33,6 +34,7 @@
       "wishlist"
     ],
     "config": {
+      "githubSponsorsUsername": "balupton",
       "buymeacoffeeUsername": "balupton",
       "cryptoURL": "https://bevry.me/crypto",
       "flattrUsername": "balupton",
@@ -73,33 +75,33 @@
         "require"
       ],
       "engines": {
-        "node": "8 || 10 || 12",
-        "browsers": false
+        "node": "8 || 10 || 12 || 13"
       }
     }
   ],
+  "type": "commonjs",
   "main": "source/index.js",
   "dependencies": {
-    "extendr": "^3.5.0",
-    "feedr": "^4.4.0",
-    "getrepos": "^1.5.0",
-    "githubauthquerystring": "^1.2.0",
-    "taskgroup": "^6.1.0",
-    "typechecker": "^4.9.0"
+    "extendr": "^4.3.0",
+    "feedr": "^4.7.0",
+    "getrepos": "^2.0.1",
+    "githubauthquerystring": "^2.2.0",
+    "taskgroup": "^6.4.0",
+    "typechecker": "^6.2.0"
   },
   "devDependencies": {
-    "assert-helpers": "^5.3.0",
-    "eslint": "^6.6.0",
-    "eslint-config-bevry": "^1.2.1",
-    "eslint-config-prettier": "^6.6.0",
+    "assert-helpers": "^5.8.0",
+    "eslint": "^6.7.2",
+    "eslint-config-bevry": "^2.3.0",
+    "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-prettier": "^3.1.1",
     "jsdoc": "^3.6.3",
-    "kava": "^4.0.0",
+    "kava": "^4.3.0",
     "minami": "^1.2.3",
     "prettier": "^1.19.1",
-    "projectz": "^1.10.0",
+    "projectz": "^1.15.0",
     "surge": "^0.21.3",
-    "valid-directory": "^1.1.1"
+    "valid-directory": "^1.5.0"
   },
   "scripts": {
     "our:clean": "rm -Rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
