@@ -16,38 +16,100 @@ function ignore(err: Error) {
 	return new Set<Fellow>()
 }
 
+/** GitHub's response when an error occurs */
+interface GitHubError {
+	message: string
+}
+
 /**
  * GitHub's response to getting a repository
  * https://developer.github.com/v3/repos/#list-contributors
  */
-export type ContributorsResponse = StrictUnion<
-	| Array<{
-			login: string
-			id: number
-			node_id: string
-			avatar_url: string
-			gravatar_id: string
-			url: string
-			html_url: string
-			followers_url: string
-			following_url: string
-			gists_url: string
-			starred_url: string
-			subscriptions_url: string
-			organizations_url: string
-			repos_url: string
-			events_url: string
-			received_events_url: string
-			type: string
-			site_admin: false
-			contributions: number
-	  }>
-	| { message: string }
+export interface GitHubContributor {
+	login: string
+	id: number
+	node_id: string
+	avatar_url: string
+	gravatar_id: string
+	url: string
+	html_url: string
+	followers_url: string
+	following_url: string
+	gists_url: string
+	starred_url: string
+	subscriptions_url: string
+	organizations_url: string
+	repos_url: string
+	events_url: string
+	received_events_url: string
+	type: string
+	site_admin: boolean
+	contributions: number
+}
+export type GitHubContributorsResponse = StrictUnion<
+	GitHubError | Array<GitHubContributor>
 >
 
-//
+/**
+ * GitHub's response to getting a user
+ * https://developer.github.com/v3/users/#get-a-single-user
+ */
+export interface GitHubProfile {
+	login: string
+	id: number
+	node_id: string
+	avatar_url: string
+	gravatar_id: string
+	url: string
+	html_url: string
+	followers_url: string
+	following_url: string
+	gists_url: string
+	starred_url: string
+	subscriptions_url: string
+	organizations_url: string
+	repos_url: string
+	events_url: string
+	received_events_url: string
+	type: string
+	site_admin: false
+	name: string
+	company: string
+	blog: string
+	location: string
+	email: string
+	hireable: boolean
+	bio: string
+	public_repos: number
+	public_gists: number
+	followers: number
+	following: number
+	created_at: string
+	updated_at: string
+}
+export type GitHubProfileResponse = StrictUnion<GitHubError | GitHubProfile>
 
-/** Fetch Contributors from a Repository's GitHub Contributor API */
+/** Fetch the full profile information for a contributor */
+export async function getContributorProfile(
+	url: string
+): Promise<GitHubProfile> {
+	const resp = await fetch(url, {
+		headers: {
+			Accept: 'application/vnd.github.v3+json',
+		},
+	})
+	const responseData = (await resp.json()) as GitHubProfileResponse
+
+	// Check
+	if (responseData.message) {
+		return Promise.reject(new Error(responseData.message))
+	}
+
+	// Return
+	return responseData as GitHubProfile
+}
+
+/** Fetch contributors from a Repository's GitHub Contributor API */
 export async function getContributorsFromCommits(
 	slug: string
 ): Promise<Fellows> {
@@ -58,7 +120,7 @@ export async function getContributorsFromCommits(
 			Accept: 'application/vnd.github.v3+json',
 		},
 	})
-	const responseData = (await resp.json()) as ContributorsResponse
+	const responseData = (await resp.json()) as GitHubContributorsResponse
 
 	// Check
 	if (responseData.message) {
@@ -67,22 +129,36 @@ export async function getContributorsFromCommits(
 		return Promise.reject(
 			new Error('response was not an array of contributors')
 		)
+	} else if (responseData.length === 0) {
+		return new Set<Fellow>()
 	}
 
 	// Process
-	const added = new Set<Fellow>()
-	for (const user of responseData) {
-		const fellow = Fellow.ensure({
-			github: user,
-			githubUsername: user.login,
-			githubUrl: user.html_url,
-		})
-		fellow.contributedRepositories.add(slug)
-		added.add(fellow)
-	}
-
-	// Return
-	return added
+	return new Set<Fellow>(
+		await Promise.all(
+			responseData.map(async function (contributor) {
+				const profile = await getContributorProfile(contributor.url)
+				const fellow = Fellow.ensure({
+					githubProfile: profile,
+					name: profile.name,
+					email: profile.email,
+					description: profile.bio,
+					company: profile.company,
+					location: profile.location,
+					homepage: profile.blog,
+					hireable: profile.hireable,
+					githubUsername: profile.login,
+					githubUrl: profile.html_url,
+				})
+				fellow.contributions.set(slug, contributor.contributions)
+				if (contributor.site_admin) {
+					fellow.administeredRepositories.add(slug)
+				}
+				fellow.contributedRepositories.add(slug)
+				return fellow
+			})
+		)
+	)
 }
 
 /** The GitHub API person fields we use */

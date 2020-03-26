@@ -1,5 +1,9 @@
 # History
 
+## v2.1.0 2020 March 27
+
+-   Fetch the contributor's profile information (such that we have their names), instead of just their contributor data (their usernames)
+
 ## v2.0.0 2020 March 27
 
 -   Rewrote in TypeScript with breaking API changes for simplicity as new native abilities allows us to do more with less
