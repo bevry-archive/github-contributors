@@ -1,5 +1,11 @@
 # History
 
+## v2.0.0 2020 March 27
+
+-   Rewrote in TypeScript with breaking API changes for simplicity as new native abilities allows us to do more with less
+-   Updated dependencies, [base files](https://github.com/bevry/base), and [editions](https://editions.bevry.me) using [boundation](https://github.com/bevry/boundation)
+-   Minimum required node version changed from `node: >=8` to `node: >=10` to keep up with mandatory ecosystem changes
+
 ## v1.10.0 2019 December 9
 
 -   Implemented support for `GITHUB_API` environment variable to access the GitHub API via a proxy

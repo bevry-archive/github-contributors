@@ -1,19 +1,24 @@
 {
   "title": "Get Contributors",
   "name": "getcontributors",
-  "version": "1.10.0",
-  "description": "Fetch all the contributors of all the specified github users repositories",
+  "version": "2.0.0",
+  "description": "Fetch all the contributors from a github repository, github organisation, or github search",
   "homepage": "https://github.com/bevry/getcontributors",
   "license": "MIT",
   "keywords": [
+    "browser",
     "contributors",
-    "package.json",
     "github",
+    "maintainers",
+    "module",
     "organisation",
     "organization",
-    "users",
     "owners",
-    "maintainers"
+    "package.json",
+    "typed",
+    "types",
+    "typescript",
+    "users"
   ],
   "badges": {
     "list": [
@@ -62,12 +67,35 @@
     "url": "https://github.com/bevry/getcontributors.git"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "editions": [
     {
-      "description": "esnext source code with require for modules",
+      "description": "TypeScript source code with Import for modules",
       "directory": "source",
+      "entry": "index.ts",
+      "tags": [
+        "typescript",
+        "import"
+      ],
+      "engines": false
+    },
+    {
+      "description": "TypeScript compiled against ESNext for web browsers with Import for modules",
+      "directory": "edition-browsers",
+      "entry": "index.js",
+      "tags": [
+        "javascript",
+        "import"
+      ],
+      "engines": {
+        "node": false,
+        "browsers": "defaults"
+      }
+    },
+    {
+      "description": "TypeScript compiled against ESNext for Node.js with Require for modules",
+      "directory": "edition-esnext",
       "entry": "index.js",
       "tags": [
         "javascript",
@@ -75,41 +103,49 @@
         "require"
       ],
       "engines": {
-        "node": "8 || 10 || 12 || 13"
+        "node": "10 || 12 || 13",
+        "browsers": false
       }
     }
   ],
+  "types": "source/index.ts",
   "type": "commonjs",
-  "main": "source/index.js",
+  "main": "edition-esnext/index.js",
+  "browser": "edition-browsers/index.js",
+  "module": "edition-browsers/index.js",
   "dependencies": {
-    "extendr": "^4.3.0",
-    "feedr": "^4.7.0",
-    "getrepos": "^2.0.1",
-    "githubauthquerystring": "^2.2.0",
-    "taskgroup": "^6.4.0",
-    "typechecker": "^6.2.0"
+    "cross-fetch": "^3.0.4",
+    "fellow": "^6.0.0",
+    "getrepos": "^4.0.3",
+    "githubauthquerystring": "^4.0.0",
+    "simplytyped": "^3.2.3"
   },
   "devDependencies": {
-    "assert-helpers": "^5.8.0",
-    "eslint": "^6.7.2",
-    "eslint-config-bevry": "^2.3.0",
-    "eslint-config-prettier": "^6.7.0",
-    "eslint-plugin-prettier": "^3.1.1",
-    "jsdoc": "^3.6.3",
-    "kava": "^4.3.0",
-    "minami": "^1.2.3",
-    "prettier": "^1.19.1",
-    "projectz": "^1.15.0",
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
+    "@typescript-eslint/parser": "^2.25.0",
+    "assert-helpers": "^6.0.0",
+    "eslint": "^6.8.0",
+    "eslint-config-bevry": "^3.0.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "kava": "^4.4.0",
+    "prettier": "^2.0.2",
+    "projectz": "^1.19.0",
     "surge": "^0.21.3",
-    "valid-directory": "^1.5.0"
+    "typedoc": "^0.17.3",
+    "typescript": "^3.8.3",
+    "valid-directory": "^1.6.0",
+    "valid-module": "^1.0.0"
   },
   "scripts": {
     "our:clean": "rm -Rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
-    "our:compile": "echo no need for this project",
+    "our:compile": "npm run our:compile:edition-browsers && npm run our:compile:edition-esnext",
+    "our:compile:edition-browsers": "tsc --module ESNext --target ESNext --outDir ./edition-browsers --project tsconfig.json && test -d edition-browsers/source && ( mv edition-browsers/source edition-temp && rm -Rf edition-browsers && mv edition-temp edition-browsers ) || true",
+    "our:compile:edition-esnext": "tsc --module commonjs --target ESNext --outDir ./edition-esnext --project tsconfig.json && test -d edition-esnext/source && ( mv edition-esnext/source edition-temp && rm -Rf edition-esnext && mv edition-temp edition-esnext ) || true",
     "our:deploy": "echo no need for this project",
     "our:meta": "npm run our:meta:docs && npm run our:meta:projectz",
-    "our:meta:docs": "npm run our:meta:docs:jsdoc",
-    "our:meta:docs:jsdoc": "rm -Rf ./docs && jsdoc --recurse --pedantic --access all --destination ./docs --package ./package.json --readme ./README.md --template ./node_modules/minami ./source && mv ./docs/$npm_package_name/$npm_package_version/* ./docs/ && rm -Rf ./docs/$npm_package_name/$npm_package_version",
+    "our:meta:docs": "npm run our:meta:docs:typedoc",
+    "our:meta:docs:typedoc": "rm -Rf ./docs && typedoc --mode file --exclude '**/+(*test*|node_modules)' --excludeExternals --name \"$npm_package_name\" --readme ./README.md --out ./docs ./source",
     "our:meta:projectz": "projectz compile",
     "our:release": "npm run our:release:prepare && npm run our:release:check-changelog && npm run our:release:check-dirty && npm run our:release:tag && npm run our:release:push",
     "our:release:check-changelog": "cat ./HISTORY.md | grep v$npm_package_version || (echo add a changelog entry for v$npm_package_version && exit -1)",
@@ -120,11 +156,13 @@
     "our:setup": "npm run our:setup:install",
     "our:setup:install": "npm install",
     "our:test": "npm run our:verify && npm test",
-    "our:verify": "npm run our:verify:directory && npm run our:verify:eslint && npm run our:verify:prettier",
-    "our:verify:directory": "npx valid-directory",
+    "our:verify": "npm run our:verify:directory && npm run our:verify:eslint && npm run our:verify:module && npm run our:verify:prettier && npm run our:verify:typescript",
+    "our:verify:directory": "valid-directory",
     "our:verify:eslint": "eslint --fix --ignore-pattern '**/*.d.ts' --ignore-pattern '**/vendor/' --ignore-pattern '**/node_modules/' --ext .mjs,.js,.jsx,.ts,.tsx ./source",
-    "our:verify:prettier": "prettier --write ./source/**",
-    "test": "node ./source/test.js"
+    "our:verify:module": "valid-module",
+    "our:verify:prettier": "prettier --write .",
+    "our:verify:typescript": "tsc --noEmit --project tsconfig.json",
+    "test": "node ./edition-esnext/test.js"
   },
   "eslintConfig": {
     "extends": [

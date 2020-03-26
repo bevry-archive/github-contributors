@@ -28,10 +28,14 @@
 
 <!-- DESCRIPTION/ -->
 
-Fetch all the contributors of all the specified github users repositories
+Fetch all the contributors from a github repository, github organisation, or github search
 
 <!-- /DESCRIPTION -->
 
+
+## Usage
+
+[Complete API Documentation.](http://master.getcontributors.bevry.surge.sh/docs/globals.html)
 
 <!-- INSTALL/ -->
 
@@ -40,76 +44,45 @@ Fetch all the contributors of all the specified github users repositories
 <a href="https://npmjs.com" title="npm is a package manager for javascript"><h3>npm</h3></a>
 <ul>
 <li>Install: <code>npm install --save getcontributors</code></li>
-<li>Require: <code>require('getcontributors')</code></li>
+<li>Import: <code>import * as pkg from ('getcontributors')</code></li>
+<li>Require: <code>const pkg = require('getcontributors')</code></li>
 </ul>
+
+<a href="https://www.pika.dev/cdn" title="100% Native ES Modules CDN"><h3>pika</h3></a>
+
+``` html
+<script type="module">
+    import * as pkg from '//cdn.pika.dev/getcontributors/^2.0.0'
+</script>
+```
+
+<a href="https://unpkg.com" title="unpkg is a fast, global content delivery network for everything on npm"><h3>unpkg</h3></a>
+
+``` html
+<script type="module">
+    import * as pkg from '//unpkg.com/getcontributors@^2.0.0'
+</script>
+```
+
+<a href="https://jspm.io" title="Native ES Modules CDN"><h3>jspm</h3></a>
+
+``` html
+<script type="module">
+    import * as pkg from '//dev.jspm.io/getcontributors@2.0.0'
+</script>
+```
 
 <h3><a href="https://editions.bevry.me" title="Editions are the best way to produce and consume packages you care about.">Editions</a></h3>
 
 <p>This package is published with the following editions:</p>
 
-<ul><li><code>getcontributors</code> aliases <code>getcontributors/source/index.js</code></li>
-<li><code>getcontributors/source/index.js</code> is esnext source code with require for modules</li></ul>
-
-<p>Environments older than Node.js v8 may need <a href="https://babeljs.io/docs/usage/polyfill/" title="A polyfill that emulates missing ECMAScript environment features">Babel's Polyfill</a> or something similar.</p>
-
-<h3><a href="https://www.typescriptlang.org/" title="TypeScript is a typed superset of JavaScript that compiles to plain JavaScript. ">TypeScript</a></h3>
-
-This project provides its type information via inline <a href="http://usejsdoc.org" title="JSDoc is an API documentation generator for JavaScript, similar to Javadoc or phpDocumentor">JSDoc Comments</a>. To make use of this in <a href="https://www.typescriptlang.org/" title="TypeScript is a typed superset of JavaScript that compiles to plain JavaScript. ">TypeScript</a>, set your <code>maxNodeModuleJsDepth</code> compiler option to `5` or thereabouts. You can accomlish this via your `tsconfig.json` file like so:
-
-``` json
-{
-  "compilerOptions": {
-    "maxNodeModuleJsDepth": 5
-  }
-}
-```
+<ul><li><code>getcontributors/source/index.ts</code> is <a href="https://www.typescriptlang.org/" title="TypeScript is a typed superset of JavaScript that compiles to plain JavaScript. ">TypeScript</a> source code with <a href="https://babeljs.io/docs/learn-es2015/#modules" title="ECMAScript Modules">Import</a> for modules</li>
+<li><code>getcontributors/edition-browsers/index.js</code> is <a href="https://www.typescriptlang.org/" title="TypeScript is a typed superset of JavaScript that compiles to plain JavaScript. ">TypeScript</a> compiled against <a href="https://en.wikipedia.org/wiki/ECMAScript#ES.Next" title="ECMAScript Next">ESNext</a> for web browsers with <a href="https://babeljs.io/docs/learn-es2015/#modules" title="ECMAScript Modules">Import</a> for modules</li>
+<li><code>getcontributors</code> aliases <code>getcontributors/edition-esnext/index.js</code></li>
+<li><code>getcontributors/edition-esnext/index.js</code> is <a href="https://www.typescriptlang.org/" title="TypeScript is a typed superset of JavaScript that compiles to plain JavaScript. ">TypeScript</a> compiled against <a href="https://en.wikipedia.org/wiki/ECMAScript#ES.Next" title="ECMAScript Next">ESNext</a> for <a href="https://nodejs.org" title="Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine">Node.js</a> with <a href="https://nodejs.org/dist/latest-v5.x/docs/api/modules.html" title="Node/CJS Modules">Require</a> for modules</li></ul>
 
 <!-- /INSTALL -->
 
-
-## Usage
-
-[API Documentation.](http://master.getcontributors.bevry.surge.sh/docs/)
-
-```javascript
-// Create our getcontributors instance
-var getter = require('getcontributors').create({
-    log: console.log // optional, arguments: level, message...
-})
-
-// Fetch all the contributors on these github repositories
-getter.fetchContributorsFromRepos(['bevry/getcontributors'], function(
-    err,
-    contributors
-) {
-    console.log(err, contributors)
-
-    // Fetch all the contributors on these github users/organisations
-    getter.fetchContributorsFromUsers(['bevry'], function(err, contributors) {
-        console.log(err, contributors)
-
-        // Get the combined listing
-        console.log(getter.getContributors())
-    })
-})
-```
-
-Contributors are returned as an array of contributor objects, here is an example contributor object:
-
-```javascript
-{
-	name: "Benjamin Lupton",
-	email: "b@lupton.cc",
-	url: "https://github.com/balupton",
-	username: "balupton",
-	text: "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)",
-	repos: {
-		"bevry/docpad": "https://github.com/bevry/docpad",
-		"bevry/getcontributors": "https://github.com/bevry/getcontributors"
-		// ...
-	}
-}
-```
 
 <!-- HISTORY/ -->
 
