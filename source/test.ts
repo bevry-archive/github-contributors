@@ -2,12 +2,17 @@
 import { equal } from 'assert-helpers'
 import { suite, Errback } from 'kava'
 import * as getter from './'
+import { StrictUnion } from 'simplytyped'
+
+function long(result: StrictUnion<Set<getter.Fellow> | Array<getter.Fellow>>) {
+	const size = result.size || result.length || 0
+	equal(size > 0, true, `more than one result, it had ${size}`)
+}
 
 function check(done: Errback, log: boolean = false) {
 	return function (result: any) {
 		if (log) console.log(result)
-		const size = result.size || result.length
-		equal(size > 0, true, `more than one result, it had ${size}`)
+		long(result)
 		setImmediate(done)
 	}
 }
@@ -25,6 +30,9 @@ suite('getcontributors', function (suite, test) {
 			.getContributorsFromCommits('bevry/getcontributors')
 			.then(check(done, true))
 			.catch(done)
+	})
+	test('singleton', function () {
+		long(getter.Fellow.contributesRepository('bevry/getcontributors'))
 	})
 	test('repo', function (done) {
 		getter

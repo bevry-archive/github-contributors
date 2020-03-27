@@ -8,7 +8,11 @@ import { getReposFromUsers, getReposFromSearch, SearchOptions } from 'getrepos'
 import githubAuthQueryString from 'githubauthquerystring'
 const ghapi = process.env.GITHUB_API || 'https://api.github.com'
 
-type Fellows = Set<Fellow>
+/** Collection of fellows */
+export type Fellows = Set<Fellow>
+
+/** Export the Fellow class we have imported and are using, such that consumers of this package and ensure they are interacting with the same singletons */
+export { Fellow }
 
 /** Continue despite certain errors */
 function ignore(err: Error) {

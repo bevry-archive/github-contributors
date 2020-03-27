@@ -1,5 +1,9 @@
 # History
 
+## v2.2.0 2020 March 27
+
+-   Export the Fellow import we are using to ensure singelton compatability
+
 ## v2.1.0 2020 March 27
 
 -   Fetch the contributor's profile information (such that we have their names), instead of just their contributor data (their usernames)

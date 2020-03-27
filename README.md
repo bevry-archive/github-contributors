@@ -4,6 +4,7 @@
 
 <!-- /TITLE -->
 
+
 <!-- BADGES/ -->
 
 <span class="badge-travisci"><a href="http://travis-ci.com/bevry/getcontributors" title="Check this project's build status on TravisCI"><img src="https://img.shields.io/travis/com/bevry/getcontributors/master.svg" alt="Travis CI Build Status" /></a></span>
@@ -24,11 +25,13 @@
 
 <!-- /BADGES -->
 
+
 <!-- DESCRIPTION/ -->
 
 Fetch all the contributors from a github repository, github organisation, or github search
 
 <!-- /DESCRIPTION -->
+
 
 ## Usage
 
@@ -39,7 +42,6 @@ Fetch all the contributors from a github repository, github organisation, or git
 <h2>Install</h2>
 
 <a href="https://npmjs.com" title="npm is a package manager for javascript"><h3>npm</h3></a>
-
 <ul>
 <li>Install: <code>npm install --save getcontributors</code></li>
 <li>Import: <code>import * as pkg from ('getcontributors')</code></li>
@@ -48,25 +50,25 @@ Fetch all the contributors from a github repository, github organisation, or git
 
 <a href="https://www.pika.dev/cdn" title="100% Native ES Modules CDN"><h3>pika</h3></a>
 
-```html
+``` html
 <script type="module">
-    import * as pkg from '//cdn.pika.dev/getcontributors/^2.0.0'
+    import * as pkg from '//cdn.pika.dev/getcontributors/^2.2.0'
 </script>
 ```
 
 <a href="https://unpkg.com" title="unpkg is a fast, global content delivery network for everything on npm"><h3>unpkg</h3></a>
 
-```html
+``` html
 <script type="module">
-    import * as pkg from '//unpkg.com/getcontributors@^2.0.0'
+    import * as pkg from '//unpkg.com/getcontributors@^2.2.0'
 </script>
 ```
 
 <a href="https://jspm.io" title="Native ES Modules CDN"><h3>jspm</h3></a>
 
-```html
+``` html
 <script type="module">
-    import * as pkg from '//dev.jspm.io/getcontributors@2.0.0'
+    import * as pkg from '//dev.jspm.io/getcontributors@2.2.0'
 </script>
 ```
 
@@ -81,6 +83,7 @@ Fetch all the contributors from a github repository, github organisation, or git
 
 <!-- /INSTALL -->
 
+
 <!-- HISTORY/ -->
 
 <h2>History</h2>
@@ -88,6 +91,7 @@ Fetch all the contributors from a github repository, github organisation, or git
 <a href="https://github.com/bevry/getcontributors/blob/master/HISTORY.md#files">Discover the release history by heading on over to the <code>HISTORY.md</code> file.</a>
 
 <!-- /HISTORY -->
+
 
 <!-- CONTRIBUTE/ -->
 
@@ -97,6 +101,7 @@ Fetch all the contributors from a github repository, github organisation, or git
 
 <!-- /CONTRIBUTE -->
 
+
 <!-- BACKERS/ -->
 
 <h2>Backers</h2>
@@ -105,7 +110,7 @@ Fetch all the contributors from a github repository, github organisation, or git
 
 These amazing people are maintaining this project:
 
-<ul><li><a href="http://balupton.com">Benjamin Lupton</a> — <a href="https://github.com/bevry/getcontributors/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/getcontributors">view contributions</a></li></ul>
+<ul><li><a href="http://balupton.com">Benjamin Lupton</a></li></ul>
 
 <h3>Sponsors</h3>
 
@@ -125,11 +130,12 @@ No sponsors yet! Will you be the first?
 
 These amazing people have contributed code to this project:
 
-<ul><li><a href="http://balupton.com">Benjamin Lupton</a> — <a href="https://github.com/bevry/getcontributors/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/getcontributors">view contributions</a></li></ul>
+<ul><li><a href="http://balupton.com">Benjamin Lupton</a></li></ul>
 
 <a href="https://github.com/bevry/getcontributors/blob/master/CONTRIBUTING.md#files">Discover how you can contribute by heading on over to the <code>CONTRIBUTING.md</code> file.</a>
 
 <!-- /BACKERS -->
+
 
 <!-- LICENSE/ -->
 
