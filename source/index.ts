@@ -194,9 +194,10 @@ export async function getContributorsFromPackage(
 	// Process
 	const added = new Set<Fellow>()
 	if (packageData.author) {
-		const fellow = Fellow.ensure(packageData.author)
-		fellow.authoredRepositories.add(slug)
-		added.add(fellow)
+		Fellow.add(packageData.author).forEach((fellow) => {
+			fellow.authoredRepositories.add(slug)
+			added.add(fellow)
+		})
 	}
 	for (const contributor of packageData.contributors || []) {
 		const fellow = Fellow.ensure(contributor)

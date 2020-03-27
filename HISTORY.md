@@ -1,5 +1,9 @@
 # History
 
+## v2.4.0 2020 March 27
+
+-   Fix for multiple authors inside `package.json:author`
+
 ## v2.3.0 2020 March 27
 
 -   No longer log the warning if fetching packages fail, just continue silently

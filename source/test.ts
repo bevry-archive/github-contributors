@@ -21,7 +21,7 @@ function check(done: Errback, log: boolean = false) {
 suite('getcontributors', function (suite, test) {
 	test('package', function (done) {
 		getter
-			.getContributorsFromPackage('bevry/getcontributors')
+			.getContributorsFromPackage('bevry/ambi')
 			.then(check(done, true))
 			.catch(done)
 	})
