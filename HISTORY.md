@@ -1,5 +1,11 @@
 # History
 
+## v2.3.0 2020 March 27
+
+-   No longer log the warning if fetching packages fail, just continue silently
+-   Updated for [GitHub's new authorization recommendations](https://developer.github.com/changes/2020-02-10-deprecating-auth-through-query-param)
+-   Export the Fellow import we are using to ensure singelton compatability
+
 ## v2.2.0 2020 March 27
 
 -   Export the Fellow import we are using to ensure singelton compatability

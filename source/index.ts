@@ -5,7 +5,7 @@ import type { StrictUnion } from 'simplytyped'
 import fetch from 'cross-fetch'
 import Fellow from 'fellow'
 import { getReposFromUsers, getReposFromSearch, SearchOptions } from 'getrepos'
-import githubAuthQueryString from 'githubauthquerystring'
+import { githubAuthorizationHeader } from 'githubauthreq'
 const ghapi = process.env.GITHUB_API || 'https://api.github.com'
 
 /** Collection of fellows */
@@ -15,8 +15,8 @@ export type Fellows = Set<Fellow>
 export { Fellow }
 
 /** Continue despite certain errors */
-function ignore(err: Error) {
-	console.warn(err)
+function ignore() {
+	// console.warn(err)
 	return new Set<Fellow>()
 }
 
@@ -99,6 +99,7 @@ export async function getContributorProfile(
 ): Promise<GitHubProfile> {
 	const resp = await fetch(url, {
 		headers: {
+			Authorization: githubAuthorizationHeader(),
 			Accept: 'application/vnd.github.v3+json',
 		},
 	})
@@ -118,9 +119,10 @@ export async function getContributorsFromCommits(
 	slug: string
 ): Promise<Fellows> {
 	// Fetch
-	const url = `${ghapi}/repos/${slug}/contributors?per_page=100&${githubAuthQueryString}`
+	const url = `${ghapi}/repos/${slug}/contributors?per_page=100`
 	const resp = await fetch(url, {
 		headers: {
+			Authorization: githubAuthorizationHeader(),
 			Accept: 'application/vnd.github.v3+json',
 		},
 	})
@@ -186,11 +188,7 @@ export async function getContributorsFromPackage(
 ): Promise<Fellows> {
 	// Fetch
 	const url = `http://raw.github.com/${slug}/master/package.json`
-	const resp = await fetch(url, {
-		headers: {
-			Accept: 'application/vnd.github.v3+json',
-		},
-	})
+	const resp = await fetch(url)
 	const packageData = (await resp.json()) as PackageData
 
 	// Process
