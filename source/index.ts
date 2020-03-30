@@ -14,12 +14,6 @@ export type Fellows = Set<Fellow>
 /** Export the Fellow class we have imported and are using, such that consumers of this package and ensure they are interacting with the same singletons */
 export { Fellow }
 
-/** Continue despite certain errors */
-function ignore() {
-	// console.warn(err)
-	return new Set<Fellow>()
-}
-
 /** GitHub's response when an error occurs */
 interface GitHubError {
 	message: string
@@ -218,8 +212,20 @@ export async function getContributorsFromPackage(
 export async function getContributorsFromRepo(slug: string): Promise<Fellows> {
 	return Fellow.flatten(
 		await Promise.all([
-			getContributorsFromCommits(slug),
-			getContributorsFromPackage(slug).catch(ignore),
+			getContributorsFromCommits(slug).catch(function (err) {
+				console.warn(
+					`unable to fetch contributors from commits for ${slug} - this can happen if the repository does not yet have a commit history`,
+					err
+				)
+				return new Set<Fellow>()
+			}),
+			getContributorsFromPackage(slug).catch(function (err) {
+				console.warn(
+					`unable to fetch contributors from package for ${slug} - this can happen if the repository does not yet have a package.json file`,
+					err
+				)
+				return new Set<Fellow>()
+			}),
 		])
 	)
 }

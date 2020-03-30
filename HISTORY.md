@@ -1,5 +1,10 @@
 # History
 
+## v2.5.0 2020 March 30
+
+-   `getContributorsFromRepo` no longer hard fails
+    -   enables compat with new repos
+
 ## v2.4.0 2020 March 27
 
 -   Fix for multiple authors inside `package.json:author`
