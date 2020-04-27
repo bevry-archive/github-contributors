@@ -1,7 +1,7 @@
 {
   "title": "Get Contributors",
   "name": "getcontributors",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "description": "Fetch all the contributors from a github repository, github organisation, or github search",
   "homepage": "https://github.com/bevry/getcontributors",
   "license": "MIT",
@@ -81,19 +81,6 @@
       "engines": false
     },
     {
-      "description": "TypeScript compiled against ESNext for web browsers with Import for modules",
-      "directory": "edition-browsers",
-      "entry": "index.js",
-      "tags": [
-        "javascript",
-        "import"
-      ],
-      "engines": {
-        "node": false,
-        "browsers": "defaults"
-      }
-    },
-    {
       "description": "TypeScript compiled against ESNext for Node.js with Require for modules",
       "directory": "edition-esnext",
       "entry": "index.js",
@@ -103,8 +90,21 @@
         "require"
       ],
       "engines": {
-        "node": "10 || 12",
+        "node": "10 || 12 || 13",
         "browsers": false
+      }
+    },
+    {
+      "description": "TypeScript compiled against ES2019 for web browsers with Import for modules",
+      "directory": "edition-browsers",
+      "entry": "index.js",
+      "tags": [
+        "javascript",
+        "import"
+      ],
+      "engines": {
+        "node": false,
+        "browsers": "defaults"
       }
     }
   ],
@@ -117,22 +117,23 @@
     "cross-fetch": "^3.0.4",
     "fellow": "^6.4.0",
     "getrepos": "^5.0.0",
-    "githubauthreq": "^5.0.0",
+    "githubauthreq": "^5.1.1",
     "simplytyped": "^3.2.3"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^2.25.0",
-    "@typescript-eslint/parser": "^2.25.0",
+    "@bevry/update-contributors": "^1.0.1",
+    "@typescript-eslint/eslint-plugin": "^2.29.0",
+    "@typescript-eslint/parser": "^2.29.0",
     "assert-helpers": "^6.0.0",
     "eslint": "^6.8.0",
-    "eslint-config-bevry": "^3.0.0",
-    "eslint-config-prettier": "^6.10.1",
-    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-config-bevry": "^3.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
     "kava": "^4.4.0",
-    "prettier": "^2.0.2",
-    "projectz": "^1.19.0",
+    "prettier": "^2.0.5",
+    "projectz": "^1.19.1",
     "surge": "^0.21.3",
-    "typedoc": "^0.17.3",
+    "typedoc": "^0.17.6",
     "typescript": "^3.8.3",
     "valid-directory": "^1.6.0",
     "valid-module": "^1.0.0"
@@ -140,10 +141,11 @@
   "scripts": {
     "our:clean": "rm -Rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
     "our:compile": "npm run our:compile:edition-browsers && npm run our:compile:edition-esnext",
-    "our:compile:edition-browsers": "tsc --module ESNext --target ESNext --outDir ./edition-browsers --project tsconfig.json && test -d edition-browsers/source && ( mv edition-browsers/source edition-temp && rm -Rf edition-browsers && mv edition-temp edition-browsers ) || true",
+    "our:compile:edition-browsers": "tsc --module ESNext --target ES2019 --outDir ./edition-browsers --project tsconfig.json && test -d edition-browsers/source && ( mv edition-browsers/source edition-temp && rm -Rf edition-browsers && mv edition-temp edition-browsers ) || true",
     "our:compile:edition-esnext": "tsc --module commonjs --target ESNext --outDir ./edition-esnext --project tsconfig.json && test -d edition-esnext/source && ( mv edition-esnext/source edition-temp && rm -Rf edition-esnext && mv edition-temp edition-esnext ) || true",
     "our:deploy": "echo no need for this project",
-    "our:meta": "npm run our:meta:docs && npm run our:meta:projectz",
+    "our:meta": "npm run our:meta:contributors && npm run our:meta:docs && npm run our:meta:projectz",
+    "our:meta:contributors": "update-contributors",
     "our:meta:docs": "npm run our:meta:docs:typedoc",
     "our:meta:docs:typedoc": "rm -Rf ./docs && typedoc --mode file --exclude '**/+(*test*|node_modules)' --excludeExternals --name \"$npm_package_name\" --readme ./README.md --out ./docs ./source",
     "our:meta:projectz": "projectz compile",

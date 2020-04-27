@@ -5,7 +5,7 @@ import type { StrictUnion } from 'simplytyped'
 import fetch from 'cross-fetch'
 import Fellow from 'fellow'
 import { getReposFromUsers, getReposFromSearch, SearchOptions } from 'getrepos'
-import { githubAuthorizationHeader } from 'githubauthreq'
+import { getHeaders } from 'githubauthreq'
 const ghapi = process.env.GITHUB_API || 'https://api.github.com'
 
 /** Collection of fellows */
@@ -92,10 +92,7 @@ export async function getContributorProfile(
 	url: string
 ): Promise<GitHubProfile> {
 	const resp = await fetch(url, {
-		headers: {
-			Authorization: githubAuthorizationHeader(),
-			Accept: 'application/vnd.github.v3+json',
-		},
+		headers: getHeaders(),
 	})
 	const responseData = (await resp.json()) as GitHubProfileResponse
 
@@ -115,10 +112,7 @@ export async function getContributorsFromCommits(
 	// Fetch
 	const url = `${ghapi}/repos/${slug}/contributors?per_page=100`
 	const resp = await fetch(url, {
-		headers: {
-			Authorization: githubAuthorizationHeader(),
-			Accept: 'application/vnd.github.v3+json',
-		},
+		headers: getHeaders(),
 	})
 	const responseData = (await resp.json()) as GitHubContributorsResponse
 
