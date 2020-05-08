@@ -1,14 +1,13 @@
 {
   "title": "Get Contributors",
   "name": "getcontributors",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "Fetch all the contributors from a github repository, github organisation, or github search",
   "homepage": "https://github.com/bevry/getcontributors",
   "license": "MIT",
   "keywords": [
     "browser",
     "contributors",
-    "dom",
     "github",
     "maintainers",
     "module",
@@ -117,9 +116,9 @@
   "module": "edition-browsers/index.js",
   "dependencies": {
     "cross-fetch": "^3.0.4",
-    "fellow": "^6.5.0",
-    "getrepos": "^5.0.1",
-    "githubauthreq": "^5.1.1",
+    "fellow": "^6.6.0",
+    "getrepos": "^5.1.0",
+    "githubauthreq": "^5.2.0",
     "simplytyped": "^3.3.0"
   },
   "devDependencies": {
