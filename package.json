@@ -1,7 +1,7 @@
 {
   "title": "Get Contributors",
   "name": "getcontributors",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "description": "Fetch all the contributors from a github repository, github organisation, or github search",
   "homepage": "https://github.com/bevry/getcontributors",
   "license": "MIT",
@@ -49,16 +49,20 @@
       "patreonUsername": "bevry",
       "paypalURL": "https://bevry.me/paypal",
       "wishlistURL": "https://bevry.me/wishlist",
-      "travisTLD": "com"
+      "travisTLD": "com",
+      "githubUsername": "bevry",
+      "githubRepository": "getcontributors",
+      "githubSlug": "bevry/getcontributors",
+      "npmPackageName": "getcontributors"
     }
   },
   "funding": "https://bevry.me/fund",
   "author": "2013+ Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
   "maintainers": [
-    "Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
+    "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
   ],
   "contributors": [
-    "Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
+    "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
   ],
   "bugs": {
     "url": "https://github.com/bevry/getcontributors/issues"
@@ -122,17 +126,17 @@
     "simplytyped": "^3.3.0"
   },
   "devDependencies": {
-    "@bevry/update-contributors": "^1.0.1",
+    "@bevry/update-contributors": "^1.1.0",
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
     "assert-helpers": "^6.2.0",
-    "eslint": "^6.8.0",
+    "eslint": "^7.0.0",
     "eslint-config-bevry": "^3.4.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.3",
-    "kava": "^4.4.0",
+    "kava": "^5.0.0",
     "prettier": "^2.0.5",
-    "projectz": "^1.19.1",
+    "projectz": "^2.0.0",
     "surge": "^0.21.3",
     "typedoc": "^0.17.6",
     "typescript": "^3.8.3",

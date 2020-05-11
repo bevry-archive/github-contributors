@@ -52,7 +52,7 @@ Fetch all the contributors from a github repository, github organisation, or git
 
 ``` html
 <script type="module">
-    import * as pkg from '//cdn.pika.dev/getcontributors/^2.7.0'
+    import * as pkg from '//cdn.pika.dev/getcontributors/^2.8.0'
 </script>
 ```
 
@@ -60,7 +60,7 @@ Fetch all the contributors from a github repository, github organisation, or git
 
 ``` html
 <script type="module">
-    import * as pkg from '//unpkg.com/getcontributors@^2.7.0'
+    import * as pkg from '//unpkg.com/getcontributors@^2.8.0'
 </script>
 ```
 
@@ -68,7 +68,7 @@ Fetch all the contributors from a github repository, github organisation, or git
 
 ``` html
 <script type="module">
-    import * as pkg from '//dev.jspm.io/getcontributors@2.7.0'
+    import * as pkg from '//dev.jspm.io/getcontributors@2.8.0'
 </script>
 ```
 
@@ -110,7 +110,7 @@ Fetch all the contributors from a github repository, github organisation, or git
 
 These amazing people are maintaining this project:
 
-<ul><li><a href="http://balupton.com">Benjamin Lupton</a> — <a href="https://github.com/bevry/getcontributors/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/getcontributors">view contributions</a></li></ul>
+<ul><li><a href="https://github.com/balupton">Benjamin Lupton</a> — <a href="https://github.com/bevry/getcontributors/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/getcontributors">view contributions</a></li></ul>
 
 <h3>Sponsors</h3>
 
@@ -130,7 +130,7 @@ No sponsors yet! Will you be the first?
 
 These amazing people have contributed code to this project:
 
-<ul><li><a href="http://balupton.com">Benjamin Lupton</a> — <a href="https://github.com/bevry/getcontributors/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/getcontributors">view contributions</a></li></ul>
+<ul><li><a href="https://github.com/balupton">Benjamin Lupton</a> — <a href="https://github.com/bevry/getcontributors/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/getcontributors">view contributions</a></li></ul>
 
 <a href="https://github.com/bevry/getcontributors/blob/master/CONTRIBUTING.md#files">Discover how you can contribute by heading on over to the <code>CONTRIBUTING.md</code> file.</a>
 
