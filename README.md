@@ -52,7 +52,7 @@ Fetch all the contributors from a github repository, github organisation, or git
 
 ``` html
 <script type="module">
-    import * as pkg from '//cdn.pika.dev/getcontributors/^2.8.0'
+    import * as pkg from '//cdn.pika.dev/getcontributors/^2.9.0'
 </script>
 ```
 
@@ -60,7 +60,7 @@ Fetch all the contributors from a github repository, github organisation, or git
 
 ``` html
 <script type="module">
-    import * as pkg from '//unpkg.com/getcontributors@^2.8.0'
+    import * as pkg from '//unpkg.com/getcontributors@^2.9.0'
 </script>
 ```
 
@@ -68,7 +68,7 @@ Fetch all the contributors from a github repository, github organisation, or git
 
 ``` html
 <script type="module">
-    import * as pkg from '//dev.jspm.io/getcontributors@2.8.0'
+    import * as pkg from '//dev.jspm.io/getcontributors@2.9.0'
 </script>
 ```
 
