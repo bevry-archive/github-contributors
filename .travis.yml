@@ -9,7 +9,7 @@ node_js:
 matrix:
   fast_finish: true
   allow_failures: []
-cache: npm
+cache: yarn
 install:
   - >-
     eval "$(curl -fsSL
@@ -28,4 +28,4 @@ after_success:
 notifications:
   email:
     recipients: >-
-      QlExnYLH5xDyQrHBWUnOjuWdKo3R6CbwCpm5c3osH0Rq9H7ZXDuL3pZ7ZzB9AAcZdegfMz2NB3bklre3yoEqoZGf9TzhBa+8VN1bE8j7MxT8KnhJYcVGXZl8H35duJ+x8BuqWbbioeRYc/Y/q97BO9wEtvpsJeuzejj/xNDMCpQ=
+      TGDxVi2kCSjJDtUfpEq4//YKx3pCuYY05wl3tGXPWeimZ1rzTs1Kwukt2k+hnOxNtnv3NuAk4FY3UvbYcS1CBfjAbY/+MjGNUtcFnDP0+n51B8tgzP04HlvhKnqpty74+00dTpbwRGYDpZ0pW3Ty5PLus2j/e2n/XPzvixSfexA=
