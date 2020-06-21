@@ -1,7 +1,7 @@
 {
   "title": "Get Contributors",
   "name": "getcontributors",
-  "version": "2.15.0",
+  "version": "2.16.0",
   "description": "Fetch all the contributors from a github repository, github organisation, or github search",
   "homepage": "https://github.com/bevry/getcontributors",
   "license": "MIT",
@@ -120,30 +120,29 @@
   "module": "edition-browsers/index.js",
   "dependencies": {
     "cross-fetch": "^3.0.4",
-    "editions": "3.5.0",
     "fellow": "6.10.0",
     "getrepos": "5.6.0",
     "githubauthreq": "5.7.0",
     "simplytyped": "^3.3.0"
   },
   "devDependencies": {
-    "@bevry/update-contributors": "1.9.0",
+    "@bevry/update-contributors": "^1.9.0",
     "@typescript-eslint/eslint-plugin": "^3.3.0",
     "@typescript-eslint/parser": "^3.3.0",
-    "assert-helpers": "6.8.0",
+    "assert-helpers": "^6.8.0",
     "eslint": "^7.3.0",
-    "eslint-config-bevry": "3.8.0",
+    "eslint-config-bevry": "^3.8.0",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "kava": "5.4.0",
-    "make-deno-edition": "0.9.1",
+    "kava": "^5.7.0",
+    "make-deno-edition": "^0.9.1",
     "prettier": "^2.0.5",
-    "projectz": "2.5.0",
+    "projectz": "^2.9.0",
     "surge": "^0.21.3",
     "typedoc": "^0.17.7",
     "typescript": "^3.9.5",
-    "valid-directory": "2.2.0",
-    "valid-module": "1.4.0"
+    "valid-directory": "^2.5.0",
+    "valid-module": "^1.6.0"
   },
   "scripts": {
     "our:clean": "rm -Rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
