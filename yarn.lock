@@ -596,7 +596,7 @@ editions@^2.1.0, editions@^2.2.0:
     errlop "^2.0.0"
     semver "^6.3.0"
 
-editions@^3.4.0:
+editions@^3.4.0, editions@^3.9.0:
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/editions/-/editions-3.9.0.tgz#b10a6dd7b399cb94363d2111b7f53c9b04c214e6"
   integrity sha512-u/x7nwf2mgKxi1DDa8KbzmjTs2wKYGAjfeNxbSUomVS0t9CY9i5867SruRdgCnSxZeNjPY2CLQxhTYt7q2uC2A==
@@ -1038,20 +1038,20 @@ getrepos@5.6.0:
     native-promise-pool "^3.5.0"
     simplytyped "^3.3.0"
 
+githubauthreq@5.11.0, githubauthreq@^5.6.0:
+  version "5.11.0"
+  resolved "https://registry.yarnpkg.com/githubauthreq/-/githubauthreq-5.11.0.tgz#ee0cc179a55ee00c178228d23adc277e322876e5"
+  integrity sha512-qtrq1Ff6avb8SdJhAj9278IxIVaFvUhb9kagoyO1usl2BmluW8xqLhtoKttgQNVnJxvh3iKQYyZsdswFHWz6iA==
+  dependencies:
+    editions "^3.9.0"
+    simplytyped "^3.3.0"
+
 githubauthreq@5.7.0:
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/githubauthreq/-/githubauthreq-5.7.0.tgz#92cfd62044a043f364ad65043da6a1c8f512dd59"
   integrity sha512-Jqn3AKY8yUiIrxyA/GQV7/tS5K//t8d3jxs65ElWbTEskzed/us5TgM3lowhHh36WW1dUDj/W75J5kN9Uny3Nw==
   dependencies:
     editions "^3.4.0"
-    simplytyped "^3.3.0"
-
-githubauthreq@^5.6.0:
-  version "5.10.0"
-  resolved "https://registry.yarnpkg.com/githubauthreq/-/githubauthreq-5.10.0.tgz#5d74abb269dc27e5bb50e823b032365b33febc9a"
-  integrity sha512-paduy1En/Pyouk7UOnvVV5ZUsoyf4Xf/bCVhznYz7VtpGsQF0MDoErwlAv2oqlsenfkIPXNPy1WS3u+ogJ2fVQ==
-  dependencies:
-    editions "3.5.0"
     simplytyped "^3.3.0"
 
 glob-parent@^5.0.0:
