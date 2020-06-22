@@ -121,7 +121,7 @@
   "dependencies": {
     "cross-fetch": "^3.0.4",
     "fellow": "6.10.0",
-    "getrepos": "5.6.0",
+    "getrepos": "5.10.0",
     "githubauthreq": "5.7.0",
     "simplytyped": "^3.3.0"
   },

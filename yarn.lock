@@ -1028,6 +1028,16 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
+getrepos@5.10.0:
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/getrepos/-/getrepos-5.10.0.tgz#3f7f1f380aac6d0957de3227e53b4ac058d4d6ad"
+  integrity sha512-I2k6eU3KAlGm4dDJhotv7SC+nOALgOK67ZHN6NBZtOyp5HlaYW6lCastHh8vnwbP9yUccplwnSO+adt8ByMv7A==
+  dependencies:
+    cross-fetch "^3.0.4"
+    githubauthreq "5.7.0"
+    native-promise-pool "3.6.0"
+    simplytyped "^3.3.0"
+
 getrepos@5.6.0:
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/getrepos/-/getrepos-5.6.0.tgz#05ad749e1b30b43207a4bc6c473a2644be881285"
@@ -1514,6 +1524,11 @@ mute-stream@~0.0.4:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
+
+native-promise-pool@3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/native-promise-pool/-/native-promise-pool-3.6.0.tgz#b3d3c730a9167851c2b69175dd83012310fb4191"
+  integrity sha512-TaJibaT3r77Cx9qC6Wpq/QZc10COdAhijWGDxR5c7OzToLwrgM4qxje5YC6ur9nv088Xkut7qm7YHuNHlt4Ljg==
 
 native-promise-pool@^3.5.0:
   version "3.9.0"
