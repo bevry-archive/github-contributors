@@ -901,7 +901,7 @@ fellow@6.10.0:
   resolved "https://registry.yarnpkg.com/fellow/-/fellow-6.10.0.tgz#c6bd7e6c7c34869ff3e726c06a8d148c44c326f8"
   integrity sha512-YC4nniyJZxuLvHt61i1ntxoAR8RZeBXrXfzAiMpnOTk7bpn7D6K9pvc3UZ8vjt/Ci7QN1BM7rXfomm2HRW4kjA==
 
-fellow@^6.11.0:
+fellow@6.14.0, fellow@^6.11.0:
   version "6.14.0"
   resolved "https://registry.yarnpkg.com/fellow/-/fellow-6.14.0.tgz#318934ff1243d47e29507a10d8458fe51fd6341c"
   integrity sha512-Sj4L/HGCyfBeEPd1hekxkvn+Sre0ylttubJrZVZr05J8wXaYVmiLCI3d2SAUmPcQ2viK2RZEWehMhaVGKeldCg==
