@@ -6,7 +6,8 @@ import fetch from 'cross-fetch'
 import Fellow from 'fellow'
 import { getReposFromUsers, getReposFromSearch, SearchOptions } from 'getrepos'
 import { getHeaders } from 'githubauthreq'
-const ghapi = process.env.GITHUB_API || 'https://api.github.com'
+import { env } from 'process'
+const { GITHUB_API = 'https://api.github.com' } = env
 
 /** Collection of fellows */
 export type Fellows = Set<Fellow>
@@ -110,7 +111,7 @@ export async function getContributorsFromCommits(
 	slug: string
 ): Promise<Fellows> {
 	// Fetch
-	const url = `${ghapi}/repos/${slug}/contributors?per_page=100`
+	const url = `${GITHUB_API}/repos/${slug}/contributors?per_page=100`
 	const resp = await fetch(url, {
 		headers: getHeaders(),
 	})
