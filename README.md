@@ -48,11 +48,11 @@ Fetch all the contributors from a github repository, github organisation, or git
 <li>Require: <code>const pkg = require('getcontributors')</code></li>
 </ul>
 
-<a href="https://www.pika.dev/cdn" title="100% Native ES Modules CDN"><h3>pika</h3></a>
+<a href="https://www.skypack.dev" title="Skypack is a JavaScript Delivery Network for modern web apps"><h3>Skypack</h3></a>
 
 ``` html
 <script type="module">
-    import * as pkg from '//cdn.pika.dev/getcontributors/^2.20.0'
+    import * as pkg from '//cdn.skypack.dev/getcontributors@^2.21.0'
 </script>
 ```
 
@@ -60,7 +60,7 @@ Fetch all the contributors from a github repository, github organisation, or git
 
 ``` html
 <script type="module">
-    import * as pkg from '//unpkg.com/getcontributors@^2.20.0'
+    import * as pkg from '//unpkg.com/getcontributors@^2.21.0'
 </script>
 ```
 
@@ -68,7 +68,7 @@ Fetch all the contributors from a github repository, github organisation, or git
 
 ``` html
 <script type="module">
-    import * as pkg from '//dev.jspm.io/getcontributors@2.20.0'
+    import * as pkg from '//dev.jspm.io/getcontributors@2.21.0'
 </script>
 ```
 
