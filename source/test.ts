@@ -1,8 +1,10 @@
 // Import
 import { equal } from 'assert-helpers'
-import { suite, Errback } from 'kava'
+import kava from 'kava'
 import * as getter from './index.js'
 import { StrictUnion } from 'simplytyped'
+
+type Errback = (error?: Error) => void
 
 function long(result: StrictUnion<Set<getter.Fellow> | Array<getter.Fellow>>) {
 	const size = result.size || result.length || 0
@@ -18,7 +20,7 @@ function check(done: Errback, log: boolean = false) {
 }
 
 // Test
-suite('getcontributors', function (suite, test) {
+kava.suite('getcontributors', function (suite, test) {
 	test('package', function (done) {
 		getter
 			.getContributorsFromPackage('bevry/ambi')
