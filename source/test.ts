@@ -1,7 +1,7 @@
 // Import
 import { equal } from 'assert-helpers'
 import { suite, Errback } from 'kava'
-import * as getter from './'
+import * as getter from './index.js'
 import { StrictUnion } from 'simplytyped'
 
 function long(result: StrictUnion<Set<getter.Fellow> | Array<getter.Fellow>>) {
