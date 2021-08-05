@@ -20,31 +20,31 @@ function check(done: Errback, log: boolean = false) {
 }
 
 // Test
-kava.suite('getcontributors', function (suite, test) {
+kava.suite('@bevry/github-contributors', function (suite, test) {
 	test('package', function (done) {
 		getter
-			.getContributorsFromPackage('bevry/ambi')
+			.getContributorsFromRepoPackageData('bevry/ambi')
 			.then(check(done, true))
 			.catch(done)
 	})
 	test('commits', function (done) {
 		getter
-			.getContributorsFromCommits('bevry/getcontributors')
+			.getContributorsFromRepoContributorData('bevry/github-contributors')
 			.then(check(done, true))
 			.catch(done)
 	})
 	test('singleton', function () {
-		long(getter.Fellow.contributesRepository('bevry/getcontributors'))
+		long(getter.Fellow.contributesRepository('bevry/github-contributors'))
 	})
 	test('repo', function (done) {
 		getter
-			.getContributorsFromRepo('bevry/getcontributors')
+			.getContributorsFromRepo('bevry/github-contributors')
 			.then(check(done))
 			.catch(done)
 	})
 	test('repos', function (done) {
 		getter
-			.getContributorsFromRepos(['bevry/getcontributors'])
+			.getContributorsFromRepos(['bevry/github-contributors'])
 			.then(check(done))
 			.catch(done)
 	})

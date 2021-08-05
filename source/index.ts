@@ -1,27 +1,32 @@
 /* eslint camelcase:0 */
 
-// Import
+// external
 import type { StrictUnion } from 'simplytyped'
-import fetch from 'cross-fetch'
+import Pool from 'native-promise-pool'
 import Fellow from 'fellow'
-import { getReposFromUsers, getReposFromSearch, SearchOptions } from 'getrepos'
-import { getHeaders } from 'githubauthreq'
-import { env } from 'process'
-const { GITHUB_API = 'https://api.github.com' } = env
+import {
+	getReposFromUsers,
+	getReposFromSearch,
+	MultiOptions,
+} from '@bevry/github-repos'
+import { query, GitHubCredentials } from '@bevry/github-api'
+import fetch from 'node-fetch'
+import { append } from '@bevry/list'
 
 /** Collection of fellows */
 export type Fellows = Set<Fellow>
 
-/** Export the Fellow class we have imported and are using, such that consumers of this package and ensure they are interacting with the same singletons */
+/** Export some types we consume, so that others can also use them. */
 export { Fellow }
+export type { MultiOptions }
 
-/** GitHub's response when an error occurs */
+/** GitHub's response when an error occurs. */
 interface GitHubError {
 	message: string
 }
 
 /**
- * GitHub's response to getting a repository
+ * GitHub's response to getting a repository.
  * https://developer.github.com/v3/repos/#list-contributors
  */
 export interface GitHubContributor {
@@ -41,8 +46,11 @@ export interface GitHubContributor {
 	repos_url: string
 	events_url: string
 	received_events_url: string
+	/* Not sure what this means, however it is set to `"User"` in the example. */
 	type: string
+	/* Whether they are an admin */
 	site_admin: boolean
+	/** Count of how many contributions */
 	contributions: number
 }
 export type GitHubContributorsResponse = StrictUnion<
@@ -50,7 +58,7 @@ export type GitHubContributorsResponse = StrictUnion<
 >
 
 /**
- * GitHub's response to getting a user
+ * GitHub's response to getting a user.
  * https://developer.github.com/v3/users/#get-a-single-user
  */
 export interface GitHubProfile {
@@ -88,72 +96,122 @@ export interface GitHubProfile {
 }
 export type GitHubProfileResponse = StrictUnion<GitHubError | GitHubProfile>
 
-/** Fetch the full profile information for a contributor */
+/**
+ * Fetch the full profile information for a contributor.
+ * @param url the full api url for the contributor data
+ * @param credentials custom github credentials, omit to use the environment variables
+ */
 export async function getContributorProfile(
-	url: string
+	url: string,
+	credentials?: GitHubCredentials
 ): Promise<GitHubProfile> {
-	const resp = await fetch(url, {
-		headers: getHeaders(),
+	// fetch
+	const resp = await query({
+		url,
+		credentials,
+		userAgent: '@bevry/github-contributors',
 	})
-	const responseData = (await resp.json()) as GitHubProfileResponse
+	const data: GitHubProfileResponse = await resp.json()
 
-	// Check
-	if (responseData.message) {
-		return Promise.reject(new Error(responseData.message))
+	// check
+	if (data.message) {
+		return Promise.reject(new Error(data.message))
 	}
 
-	// Return
-	return responseData as GitHubProfile
+	// return
+	return data as GitHubProfile
 }
 
-/** Fetch contributors from a Repository's GitHub Contributor API */
-export async function getContributorsFromCommits(
-	slug: string
+/**
+ * Fetch contributors from a Repository's GitHub Contributor API.
+ * @param slug the repository slug to fetch the contributors for, e.g. `"bevry/github-contributors"`
+ * @param opts custom search options
+ * @param credentials custom github credentials, omit to use the environment variables
+ */
+export async function getContributorsFromRepoContributorData(
+	slug: string,
+	opts: MultiOptions = {},
+	credentials?: GitHubCredentials
 ): Promise<Fellows> {
-	// Fetch
-	const url = `${GITHUB_API}/repos/${slug}/contributors?per_page=100`
-	const resp = await fetch(url, {
-		headers: getHeaders(),
+	// defaults
+	if (opts.page == null) opts.page = 1
+	if (opts.pages == null) opts.pages = 10
+	if (opts.size == null) opts.size = 100
+
+	// fetch
+	// https://docs.github.com/en/rest/reference/repos#list-repository-contributors
+	const resp = await query({
+		pathname: `repos/${slug}/contributors`,
+		searchParams: {
+			page: String(opts.page),
+			per_page: String(opts.size),
+		},
+		userAgent: '@bevry/github-contributors',
+		credentials,
 	})
-	const responseData = (await resp.json()) as GitHubContributorsResponse
+	const data: GitHubContributorsResponse = await resp.json()
 
-	// Check
-	if (responseData.message) {
-		return Promise.reject(new Error(responseData.message))
-	} else if (!Array.isArray(responseData)) {
-		return Promise.reject(
-			new Error('response was not an array of contributors')
-		)
-	} else if (responseData.length === 0) {
-		return new Set<Fellow>()
-	}
+	// prepare
+	const results: Fellows = new Set<Fellow>()
 
-	// Process
-	return new Set<Fellow>(
+	// check
+	if (data.message) throw new Error(data.message)
+	if (!Array.isArray(data))
+		throw new Error('response was not array of contributors')
+	if (data.length === 0) return results
+
+	// add these items
+	const pool = new Pool(opts.concurrency)
+	append(
+		results,
 		await Promise.all(
-			responseData.map(async function (contributor) {
-				const profile = await getContributorProfile(contributor.url)
-				const fellow = Fellow.ensure({
-					githubProfile: profile,
-					name: profile.name,
-					email: profile.email,
-					description: profile.bio,
-					company: profile.company,
-					location: profile.location,
-					homepage: profile.blog,
-					hireable: profile.hireable,
-					githubUsername: profile.login,
-					githubUrl: profile.html_url,
+			data.map((contributor) =>
+				pool.open(async () => {
+					const profile = await getContributorProfile(
+						contributor.url,
+						credentials
+					)
+					const fellow = Fellow.ensure({
+						githubProfile: profile,
+						name: profile.name,
+						email: profile.email,
+						description: profile.bio,
+						company: profile.company,
+						location: profile.location,
+						homepage: profile.blog,
+						hireable: profile.hireable,
+						githubUsername: profile.login,
+						githubUrl: profile.html_url,
+					})
+					fellow.contributions.set(slug, contributor.contributions)
+					if (contributor.site_admin) {
+						fellow.administeredRepositories.add(slug)
+					}
+					fellow.contributedRepositories.add(slug)
+					return fellow
 				})
-				fellow.contributions.set(slug, contributor.contributions)
-				if (contributor.site_admin) {
-					fellow.administeredRepositories.add(slug)
-				}
-				fellow.contributedRepositories.add(slug)
-				return fellow
-			})
+			)
 		)
 	)
+
+	// add next items
+	const within = opts.pages === 0 || opts.page < opts.pages
+	const anotherPage = data.length === opts.size && within
+	if (anotherPage)
+		append(
+			results,
+			await getContributorsFromRepoContributorData(
+				slug,
+				{
+					...opts,
+					page: opts.page + 1,
+				},
+				credentials
+			)
+		)
+
+	// return it all
+	return results
 }
 
 /** The GitHub API person fields we use */
@@ -171,14 +229,17 @@ interface PackageData {
 	maintainers?: Array<string | PackagePerson>
 }
 
-/** Fetch contributors from a repository's `package.json` file */
-export async function getContributorsFromPackage(
+/**
+ * Fetch contributors from a repository's `package.json` file.
+ * @param slug the repository slug for the package to fetch the contributors for, e.g. `"bevry/github-contributors"`
+ */
+export async function getContributorsFromRepoPackageData(
 	slug: string
 ): Promise<Fellows> {
 	// Fetch
 	const url = `http://raw.github.com/${slug}/master/package.json`
-	const resp = await fetch(url)
-	const packageData = (await resp.json()) as PackageData
+	const resp = await fetch(url, {})
+	const packageData: PackageData = await resp.json()
 
 	// Process
 	const added = new Set<Fellow>()
@@ -199,22 +260,33 @@ export async function getContributorsFromPackage(
 		added.add(fellow)
 	}
 
-	// Return
+	// return
 	return added
 }
 
-/** Fetch contributors from a GitHub repository slug */
-export async function getContributorsFromRepo(slug: string): Promise<Fellows> {
+/**
+ * Fetch contributors from a GitHub repository slug.
+ * @param slug the repository slug to fetch the contributors for, e.g. `"bevry/github-contributors"`
+ * @param opts custom search options
+ * @param credentials custom github credentials, omit to use the environment variables
+ */
+export async function getContributorsFromRepo(
+	slug: string,
+	opts: MultiOptions = {},
+	credentials?: GitHubCredentials
+): Promise<Fellows> {
 	return Fellow.flatten(
 		await Promise.all([
-			getContributorsFromCommits(slug).catch(function (err) {
-				console.warn(
-					`unable to fetch contributors from commits for ${slug} - this can happen if the repository does not yet have a commit history`,
-					err
-				)
-				return new Set<Fellow>()
-			}),
-			getContributorsFromPackage(slug).catch(function (err) {
+			getContributorsFromRepoContributorData(slug, opts, credentials).catch(
+				function (err) {
+					console.warn(
+						`unable to fetch contributors from commits for ${slug} - this can happen if the repository does not yet have a commit history`,
+						err
+					)
+					return new Set<Fellow>()
+				}
+			),
+			getContributorsFromRepoPackageData(slug).catch(function (err) {
 				console.warn(
 					`unable to fetch contributors from package for ${slug} - this can happen if the repository does not yet have a package.json file`,
 					err
@@ -225,20 +297,39 @@ export async function getContributorsFromRepo(slug: string): Promise<Fellows> {
 	)
 }
 
-/** Fetch contributors from GitHub repository slugs (e.g. `bevry/getcontributors`) */
+/**
+ * Fetch contributors from GitHub repository slugs.
+ * @param slugs array of repository slugs to fetch the contributors for, e.g. `["bevry/github-contributors"]`
+ * @param opts custom search options
+ * @param credentials custom github credentials, omit to use the environment variables
+ */
 export async function getContributorsFromRepos(
-	slugs: Array<string>
+	slugs: Array<string>,
+	opts: MultiOptions = {},
+	credentials?: GitHubCredentials
 ): Promise<Fellows> {
+	const pool = new Pool(opts.concurrency)
 	return Fellow.flatten(
-		await Promise.all(slugs.map((slug) => getContributorsFromRepo(slug)))
+		await Promise.all(
+			slugs.map((slug) =>
+				pool.open(() => getContributorsFromRepo(slug, opts, credentials))
+			)
+		)
 	)
 }
 
-/** Fetch contributors for all repositories, within the GitHub organisations and usernames (e.g. `bevry`, `balupton`) */
+/**
+ * Fetch contributors for all repositories, within the GitHub organizations and usernames.
+ * @param orgs fetch repositories for these orgs/users, such as `['bevry', 'browserstate']`
+ * @param opts custom search options
+ * @param credentials custom github credentials, omit to use the environment variables
+ */
 export async function getContributorsFromOrgs(
-	orgs: Array<string>
+	orgs: Array<string>,
+	opts: MultiOptions = {},
+	credentials?: GitHubCredentials
 ): Promise<Fellows> {
-	const repos = await getReposFromUsers(orgs)
+	const repos = await getReposFromUsers(orgs, opts, credentials)
 
 	// Filter out forks and grab the slugs
 	const slugs = repos
@@ -246,19 +337,25 @@ export async function getContributorsFromOrgs(
 		.map((repo) => repo.full_name)
 
 	// Fetch the contributors for the repos
-	return getContributorsFromRepos(slugs)
+	return getContributorsFromRepos(slugs, opts, credentials)
 }
 
-/** Fetch contributors for all repositories that match a certain search query */
+/**
+ * Fetch contributors for all repositories that match a certain search query.
+ * @param search the search query to send to GitHub, such as `@bevry language:typescript`
+ * @param opts custom search options
+ * @param credentials custom github credentials, omit to use the environment variables
+ */
 export async function getContributorsFromSearch(
 	query: string,
-	opts: SearchOptions
+	opts: MultiOptions = {},
+	credentials?: GitHubCredentials
 ): Promise<Fellows> {
-	const repos = await getReposFromSearch(query, opts)
+	const repos = await getReposFromSearch(query, opts, credentials)
 
 	// Just grab the slugs
 	const slugs = repos.map((repo) => repo.full_name)
 
 	// Fetch the contributors for the repos
-	return getContributorsFromRepos(slugs)
+	return getContributorsFromRepos(slugs, opts, credentials)
 }

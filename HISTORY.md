@@ -1,5 +1,14 @@
 # History
 
+## v3.0.0 2021 August 5
+
+-   Iterate/support pages
+-   Renamed to `@bevry/github-contributors`
+-   Renamed `getContributorsFromCommits` to `getContributorsFromRepoContributorData`
+-   Renamed `getContributorsFromPackage` to `getContributorsFromRepoPackageData`
+-   Updated for [`@bevry/github-api`](https://github.com/bevry/github-api)
+-   Updated dependencies, [base files](https://github.com/bevry/base), and [editions](https://editions.bevry.me) using [boundation](https://github.com/bevry/boundation)
+
 ## v2.23.0 2020 October 29
 
 -   Updated dependencies, [base files](https://github.com/bevry/base), and [editions](https://editions.bevry.me) using [boundation](https://github.com/bevry/boundation)
