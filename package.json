@@ -151,7 +151,7 @@
     "@bevry/github-repos": "^6.1.0",
     "fellow": "^6.24.0",
     "native-promise-pool": "^3.19.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.2.6",
     "simplytyped": "^3.3.0"
   },
   "devDependencies": {
