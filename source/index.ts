@@ -10,7 +10,6 @@ import {
 	MultiOptions,
 } from '@bevry/github-repos'
 import { query, GitHubCredentials } from '@bevry/github-api'
-import fetch from 'node-fetch'
 import { append } from '@bevry/list'
 
 /** Collection of fellows */
@@ -103,7 +102,7 @@ export type GitHubProfileResponse = StrictUnion<GitHubError | GitHubProfile>
  */
 export async function getContributorProfile(
 	url: string,
-	credentials?: GitHubCredentials
+	credentials?: GitHubCredentials,
 ): Promise<GitHubProfile> {
 	// fetch
 	const resp = await query({
@@ -131,7 +130,7 @@ export async function getContributorProfile(
 export async function getContributorsFromRepoContributorData(
 	slug: string,
 	opts: MultiOptions = {},
-	credentials?: GitHubCredentials
+	credentials?: GitHubCredentials,
 ): Promise<Fellows> {
 	// defaults
 	if (opts.page == null) opts.page = 1
@@ -169,7 +168,7 @@ export async function getContributorsFromRepoContributorData(
 				pool.open(async () => {
 					const profile = await getContributorProfile(
 						contributor.url,
-						credentials
+						credentials,
 					)
 					const fellow = Fellow.ensure({
 						githubProfile: profile,
@@ -189,9 +188,9 @@ export async function getContributorsFromRepoContributorData(
 					}
 					fellow.contributedRepositories.add(slug)
 					return fellow
-				})
-			)
-		)
+				}),
+			),
+		),
 	)
 
 	// add next items
@@ -206,8 +205,8 @@ export async function getContributorsFromRepoContributorData(
 					...opts,
 					page: opts.page + 1,
 				},
-				credentials
-			)
+				credentials,
+			),
 		)
 
 	// return it all
@@ -234,7 +233,7 @@ interface PackageData {
  * @param slug the repository slug for the package to fetch the contributors for, e.g. `"bevry/github-contributors"`
  */
 export async function getContributorsFromRepoPackageData(
-	slug: string
+	slug: string,
 ): Promise<Fellows> {
 	// Fetch
 	const url = `http://raw.github.com/${slug}/master/package.json`
@@ -273,7 +272,7 @@ export async function getContributorsFromRepoPackageData(
 export async function getContributorsFromRepo(
 	slug: string,
 	opts: MultiOptions = {},
-	credentials?: GitHubCredentials
+	credentials?: GitHubCredentials,
 ): Promise<Fellows> {
 	return Fellow.flatten(
 		await Promise.all([
@@ -281,19 +280,19 @@ export async function getContributorsFromRepo(
 				function (err) {
 					console.warn(
 						`unable to fetch contributors from commits for ${slug} - this can happen if the repository does not yet have a commit history`,
-						err
+						err,
 					)
 					return new Set<Fellow>()
-				}
+				},
 			),
 			getContributorsFromRepoPackageData(slug).catch(function (err) {
 				console.warn(
 					`unable to fetch contributors from package for ${slug} - this can happen if the repository does not yet have a package.json file`,
-					err
+					err,
 				)
 				return new Set<Fellow>()
 			}),
-		])
+		]),
 	)
 }
 
@@ -306,15 +305,15 @@ export async function getContributorsFromRepo(
 export async function getContributorsFromRepos(
 	slugs: Array<string>,
 	opts: MultiOptions = {},
-	credentials?: GitHubCredentials
+	credentials?: GitHubCredentials,
 ): Promise<Fellows> {
 	const pool = new Pool(opts.concurrency)
 	return Fellow.flatten(
 		await Promise.all(
 			slugs.map((slug) =>
-				pool.open(() => getContributorsFromRepo(slug, opts, credentials))
-			)
-		)
+				pool.open(() => getContributorsFromRepo(slug, opts, credentials)),
+			),
+		),
 	)
 }
 
@@ -327,7 +326,7 @@ export async function getContributorsFromRepos(
 export async function getContributorsFromOrgs(
 	orgs: Array<string>,
 	opts: MultiOptions = {},
-	credentials?: GitHubCredentials
+	credentials?: GitHubCredentials,
 ): Promise<Fellows> {
 	const repos = await getReposFromUsers(orgs, opts, credentials)
 
@@ -349,7 +348,7 @@ export async function getContributorsFromOrgs(
 export async function getContributorsFromSearch(
 	query: string,
 	opts: MultiOptions = {},
-	credentials?: GitHubCredentials
+	credentials?: GitHubCredentials,
 ): Promise<Fellows> {
 	const repos = await getReposFromSearch(query, opts, credentials)
 
