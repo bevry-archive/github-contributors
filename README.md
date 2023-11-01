@@ -77,7 +77,7 @@ Node.js versions 15 and 16 will need to use `--experimental-global-fetch`.
 
 ``` html
 <script type="module">
-    import * as pkg from '//cdn.skypack.dev/@bevry/github-contributors@^4.0.0'
+    import * as pkg from '//cdn.skypack.dev/@bevry/github-contributors@^4.1.0'
 </script>
 ```
 
@@ -85,7 +85,7 @@ Node.js versions 15 and 16 will need to use `--experimental-global-fetch`.
 
 ``` html
 <script type="module">
-    import * as pkg from '//unpkg.com/@bevry/github-contributors@^4.0.0'
+    import * as pkg from '//unpkg.com/@bevry/github-contributors@^4.1.0'
 </script>
 ```
 
@@ -93,7 +93,7 @@ Node.js versions 15 and 16 will need to use `--experimental-global-fetch`.
 
 ``` html
 <script type="module">
-    import * as pkg from '//dev.jspm.io/@bevry/github-contributors@4.0.0'
+    import * as pkg from '//dev.jspm.io/@bevry/github-contributors@4.1.0'
 </script>
 ```
 
