@@ -148,7 +148,7 @@
   "module": "edition-browsers/index.js",
   "dependencies": {
     "@bevry/github-api": "^10.0.0",
-    "@bevry/github-repos": "^6.1.0",
+    "@bevry/github-repos": "^7.0.0",
     "fellow": "^6.25.0",
     "native-promise-pool": "^3.19.0",
     "simplytyped": "^3.3.0"
