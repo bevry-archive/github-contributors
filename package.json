@@ -1,14 +1,14 @@
 {
   "title": "GitHub Contributors",
   "name": "@bevry/github-contributors",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "Fetch all the contributors from a github repository, github organization, or github search",
   "homepage": "https://github.com/bevry/github-contributors",
   "license": "Artistic-2.0",
   "keywords": [
     "browser",
     "contributors",
-    "es2017",
+    "es2022",
     "github",
     "maintainers",
     "module",
@@ -31,18 +31,19 @@
       "githubsponsors",
       "thanksdev",
       "patreon",
-      "flattr",
       "liberapay",
       "buymeacoffee",
       "opencollective",
       "crypto",
       "paypal",
-      "wishlist"
+      "---",
+      "discord",
+      "twitch"
     ],
     "config": {
       "githubWorkflow": "bevry",
       "githubSponsorsUsername": "balupton",
-      "thanksdevGithubUsername": "balupton",
+      "thanksdevGithubUsername": "bevry",
       "buymeacoffeeUsername": "balupton",
       "cryptoURL": "https://bevry.me/crypto",
       "flattrUsername": "balupton",
@@ -51,6 +52,9 @@
       "patreonUsername": "bevry",
       "paypalURL": "https://bevry.me/paypal",
       "wishlistURL": "https://bevry.me/wishlist",
+      "discordServerID": "1147436445783560193",
+      "discordServerInvite": "nQuXddV7VP",
+      "twitchUsername": "balupton",
       "githubUsername": "bevry",
       "githubRepository": "github-contributors",
       "githubSlug": "bevry/github-contributors",
@@ -102,13 +106,13 @@
       }
     },
     {
-      "description": "TypeScript compiled against ES2017 for Node.js with Require for modules",
-      "directory": "edition-es2017",
+      "description": "TypeScript compiled against ES2022 for Node.js 18 || 20 || 21 with Require for modules",
+      "directory": "edition-es2022",
       "entry": "index.js",
       "tags": [
         "compiled",
         "javascript",
-        "es2017",
+        "es2022",
         "require"
       ],
       "engines": {
@@ -117,13 +121,13 @@
       }
     },
     {
-      "description": "TypeScript compiled against ES2017 for Node.js with Import for modules",
-      "directory": "edition-es2017-esm",
+      "description": "TypeScript compiled against ES2022 for Node.js 18 || 20 || 21 with Import for modules",
+      "directory": "edition-es2022-esm",
       "entry": "index.js",
       "tags": [
         "compiled",
         "javascript",
-        "es2017",
+        "es2022",
         "import"
       ],
       "engines": {
@@ -134,11 +138,11 @@
   ],
   "types": "./compiled-types/",
   "type": "module",
-  "main": "edition-es2017/index.js",
+  "main": "edition-es2022/index.js",
   "exports": {
     "node": {
-      "import": "./edition-es2017-esm/index.js",
-      "require": "./edition-es2017/index.js"
+      "import": "./edition-es2022-esm/index.js",
+      "require": "./edition-es2022/index.js"
     },
     "browser": {
       "import": "./edition-browsers/index.js"
@@ -147,45 +151,43 @@
   "browser": "edition-browsers/index.js",
   "module": "edition-browsers/index.js",
   "dependencies": {
-    "@bevry/github-api": "^10.0.0",
-    "@bevry/github-repos": "^6.1.0",
+    "@bevry/github-api": "^10.2.0",
+    "@bevry/github-repos": "^7.0.0",
     "fellow": "^6.25.0",
-    "native-promise-pool": "^3.19.0",
+    "native-promise-pool": "^3.23.0",
     "simplytyped": "^3.3.0"
   },
   "devDependencies": {
-    "@bevry/update-contributors": "^1.22.0",
-    "@types/node": "^20.8.10",
-    "@typescript-eslint/eslint-plugin": "^6.9.1",
-    "@typescript-eslint/parser": "^6.9.1",
-    "assert-helpers": "^8.4.0",
-    "eslint": "^8.52.0",
-    "eslint-config-bevry": "^3.28.0",
+    "@bevry/update-contributors": "^1.23.0",
+    "@types/node": "^20.9.2",
+    "@typescript-eslint/eslint-plugin": "^6.11.0",
+    "@typescript-eslint/parser": "^6.11.0",
+    "assert-helpers": "^11.4.0",
+    "eslint": "^8.54.0",
+    "eslint-config-bevry": "^5.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
-    "kava": "^5.15.0",
-    "make-deno-edition": "^1.3.0",
-    "prettier": "^3.0.3",
-    "projectz": "^2.23.0",
+    "kava": "^7.2.0",
+    "prettier": "^3.1.0",
+    "projectz": "^3.2.0",
     "surge": "^0.23.1",
     "typedoc": "^0.25.3",
     "typescript": "5.2.2",
-    "valid-directory": "^4.0.0",
-    "valid-module": "^2.0.0"
+    "valid-directory": "^4.4.0",
+    "valid-module": "^2.4.0"
   },
   "scripts": {
-    "our:clean": "rm -Rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
-    "our:compile": "npm run our:compile:deno && npm run our:compile:edition-browsers && npm run our:compile:edition-es2017 && npm run our:compile:edition-es2017-esm && npm run our:compile:types",
-    "our:compile:deno": "make-deno-edition --attempt",
-    "our:compile:edition-browsers": "tsc --module ESNext --target ES2022 --outDir ./edition-browsers --project tsconfig.json && ( test ! -d edition-browsers/source || ( mv edition-browsers/source edition-temp && rm -Rf edition-browsers && mv edition-temp edition-browsers ) )",
-    "our:compile:edition-es2017": "tsc --module commonjs --target ES2017 --outDir ./edition-es2017 --project tsconfig.json && ( test ! -d edition-es2017/source || ( mv edition-es2017/source edition-temp && rm -Rf edition-es2017 && mv edition-temp edition-es2017 ) ) && printf '%s' '{\"type\": \"commonjs\"}' > edition-es2017/package.json",
-    "our:compile:edition-es2017-esm": "tsc --module ESNext --target ES2017 --outDir ./edition-es2017-esm --project tsconfig.json && ( test ! -d edition-es2017-esm/source || ( mv edition-es2017-esm/source edition-temp && rm -Rf edition-es2017-esm && mv edition-temp edition-es2017-esm ) ) && printf '%s' '{\"type\": \"module\"}' > edition-es2017-esm/package.json",
-    "our:compile:types": "tsc --project tsconfig.json --emitDeclarationOnly --declaration --declarationMap --declarationDir ./compiled-types && ( test ! -d compiled-types/source || ( mv compiled-types/source edition-temp && rm -Rf compiled-types && mv edition-temp compiled-types ) )",
+    "our:clean": "rm -rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
+    "our:compile": "npm run our:compile:edition-browsers && npm run our:compile:edition-es2022 && npm run our:compile:edition-es2022-esm && npm run our:compile:types",
+    "our:compile:edition-browsers": "tsc --module ESNext --target ES2022 --outDir ./edition-browsers --project tsconfig.json && ( test ! -d edition-browsers/source || ( mv edition-browsers/source edition-temp && rm -rf edition-browsers && mv edition-temp edition-browsers ) )",
+    "our:compile:edition-es2022": "tsc --module commonjs --target ES2022 --outDir ./edition-es2022 --project tsconfig.json && ( test ! -d edition-es2022/source || ( mv edition-es2022/source edition-temp && rm -rf edition-es2022 && mv edition-temp edition-es2022 ) ) && printf '%s' '{\"type\": \"commonjs\"}' > edition-es2022/package.json",
+    "our:compile:edition-es2022-esm": "tsc --module ESNext --target ES2022 --outDir ./edition-es2022-esm --project tsconfig.json && ( test ! -d edition-es2022-esm/source || ( mv edition-es2022-esm/source edition-temp && rm -rf edition-es2022-esm && mv edition-temp edition-es2022-esm ) ) && printf '%s' '{\"type\": \"module\"}' > edition-es2022-esm/package.json",
+    "our:compile:types": "tsc --project tsconfig.json --emitDeclarationOnly --declaration --declarationMap --declarationDir ./compiled-types && ( test ! -d compiled-types/source || ( mv compiled-types/source edition-temp && rm -rf compiled-types && mv edition-temp compiled-types ) )",
     "our:deploy": "printf '%s\n' 'no need for this project'",
     "our:meta": "npm run our:meta:contributors && npm run our:meta:docs && npm run our:meta:projectz",
     "our:meta:contributors": "update-contributors",
     "our:meta:docs": "npm run our:meta:docs:typedoc",
-    "our:meta:docs:typedoc": "rm -Rf ./docs && typedoc --exclude '**/+(*test*|node_modules)' --excludeExternals --out ./docs ./source",
+    "our:meta:docs:typedoc": "rm -rf ./docs && typedoc --exclude '**/+(*test*|node_modules)' --excludeExternals --out ./docs ./source",
     "our:meta:projectz": "projectz compile",
     "our:release": "npm run our:release:prepare && npm run our:release:check-changelog && npm run our:release:check-dirty && npm run our:release:tag && npm run our:release:push",
     "our:release:check-changelog": "cat ./HISTORY.md | grep \"v$npm_package_version\" || (printf '%s\n' \"add a changelog entry for v$npm_package_version\" && exit -1)",
@@ -201,7 +203,7 @@
     "our:verify:eslint": "eslint --fix --ignore-pattern '**/*.d.ts' --ignore-pattern '**/vendor/' --ignore-pattern '**/node_modules/' --ext .mjs,.js,.jsx,.ts,.tsx ./source",
     "our:verify:module": "valid-module",
     "our:verify:prettier": "prettier --write .",
-    "test": "node ./edition-es2017/test.js"
+    "test": "node ./edition-es2022/test.js"
   },
   "eslintConfig": {
     "extends": [
@@ -210,9 +212,11 @@
   },
   "prettier": {
     "semi": false,
-    "singleQuote": true
+    "singleQuote": true,
+    "trailingComma": "all"
   },
   "boundation": {
+    "nodeVersionsRange": ">=18",
     "githubActionTestEnv": {
       "GITHUB_TOKEN": "${{ secrets.GITHUB_TOKEN }}"
     }
